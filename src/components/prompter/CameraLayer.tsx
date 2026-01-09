@@ -7,6 +7,7 @@ interface CameraLayerProps {
   onRecordingTimeUpdate: (seconds: number) => void;
   videoDeviceId?: string;
   audioDeviceId?: string;
+  isCameraEnabled: boolean;
 }
 
 export const CameraLayer: React.FC<CameraLayerProps> = ({
@@ -14,6 +15,7 @@ export const CameraLayer: React.FC<CameraLayerProps> = ({
   onRecordingTimeUpdate,
   videoDeviceId,
   audioDeviceId,
+  isCameraEnabled,
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -26,8 +28,21 @@ export const CameraLayer: React.FC<CameraLayerProps> = ({
   const isRecordingRef = useRef(false);
   const mimeTypeRef = useRef<string>("video/webm");
 
-  // Initialize camera
+  // Initialize or stop camera based on isCameraEnabled
   useEffect(() => {
+    // If camera is disabled, stop everything
+    if (!isCameraEnabled) {
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach((track) => track.stop());
+        streamRef.current = null;
+      }
+      if (videoRef.current) {
+        videoRef.current.srcObject = null;
+      }
+      setIsStreamReady(false);
+      return;
+    }
+
     const startCamera = async () => {
       try {
         const constraints: MediaStreamConstraints = {
@@ -55,10 +70,12 @@ export const CameraLayer: React.FC<CameraLayerProps> = ({
 
         // Determine best mime type
         const types = [
+          "video/mp4",
+          "video/mp4;codecs=avc1,aac",
+          "video/mp4;codecs=h264,aac",
           "video/webm;codecs=vp9,opus",
           "video/webm;codecs=vp8,opus",
           "video/webm",
-          "video/mp4",
         ];
         for (const type of types) {
           if (MediaRecorder.isTypeSupported(type)) {
@@ -69,6 +86,7 @@ export const CameraLayer: React.FC<CameraLayerProps> = ({
         console.log(`Camera ready. Will use MIME type: ${mimeTypeRef.current}`);
 
         setIsStreamReady(true);
+        setError(null);
       } catch (err) {
         console.error("Error accessing camera:", err);
         setError("Camera access denied or unavailable.");
@@ -78,14 +96,17 @@ export const CameraLayer: React.FC<CameraLayerProps> = ({
     startCamera();
 
     return () => {
+      // Cleanup on unmount or dependency change is handled by the start of the effect for the *next* run
+      // or here if we want to be safe. 
+      // Actually, we should cleanup normally here too.
       if (streamRef.current) {
+        // Don't stop tracks here if we are just re-rendering, but in this case simple cleanup is safer
+        // However, React Strict Mode might double invoke.
+        // Let's rely on the check at the start of the function and this cleanup.
         streamRef.current.getTracks().forEach((track) => track.stop());
       }
-      if (recordingIntervalRef.current) {
-        clearInterval(recordingIntervalRef.current);
-      }
     };
-  }, [videoDeviceId, audioDeviceId]);
+  }, [videoDeviceId, audioDeviceId, isCameraEnabled]);
 
   // Handle recording state changes
   useEffect(() => {
@@ -200,11 +221,17 @@ export const CameraLayer: React.FC<CameraLayerProps> = ({
     }
   }, [isRecording, isStreamReady, onRecordingTimeUpdate]);
 
-  if (error) {
+  if (error && isCameraEnabled) {
     return (
       <div className="absolute inset-0 z-0 flex items-center justify-center bg-zinc-900 text-zinc-500">
         {error}
       </div>
+    );
+  }
+
+  if (!isCameraEnabled) {
+    return (
+      <div className="absolute inset-0 z-0 overflow-hidden bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-zinc-900 via-zinc-950 to-black" />
     );
   }
 

@@ -1,4 +1,8 @@
 "use client";
+import dynamic from 'next/dynamic';
+import 'react-quill-new/dist/quill.snow.css';
+
+const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
 
 import React, { useState, useEffect } from "react";
 
@@ -7,8 +11,6 @@ interface TextEditorModalProps {
     onClose: () => void;
     text: string;
     onSave: (text: string) => void;
-    textColor: string;
-    setTextColor: (color: string) => void;
 }
 
 const CloseIcon = () => (
@@ -28,8 +30,6 @@ export const TextEditorModal: React.FC<TextEditorModalProps> = ({
     onClose,
     text,
     onSave,
-    textColor,
-    setTextColor,
 }) => {
     const [editText, setEditText] = useState(text);
 
@@ -44,6 +44,16 @@ export const TextEditorModal: React.FC<TextEditorModalProps> = ({
         onClose();
     };
 
+    const modules = {
+        toolbar: [
+            [{ 'header': [1, 2, false] }],
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            [{ 'color': [] }, { 'background': [] }],
+            ['clean']
+        ],
+    };
+
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-6">
             {/* Backdrop */}
@@ -54,7 +64,7 @@ export const TextEditorModal: React.FC<TextEditorModalProps> = ({
 
             {/* Modal */}
             <div
-                className="relative w-full max-w-4xl rounded-2xl overflow-hidden shadow-2xl border border-white/10"
+                className="relative w-[95%] md:w-full max-w-4xl rounded-2xl overflow-hidden shadow-2xl border border-white/10 flex flex-col max-h-[90vh]"
                 style={{
                     background: 'linear-gradient(135deg, rgba(0,0,0,0.8) 0%, rgba(20,20,20,0.9) 100%)',
                     backdropFilter: 'blur(20px)',
@@ -63,7 +73,7 @@ export const TextEditorModal: React.FC<TextEditorModalProps> = ({
 
                 {/* Header */}
                 <div
-                    className="flex items-center justify-between px-6 py-4 border-b border-white/10"
+                    className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4 border-b border-white/10 shrink-0"
                     style={{
                         background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)',
                     }}
@@ -81,41 +91,33 @@ export const TextEditorModal: React.FC<TextEditorModalProps> = ({
                 </div>
 
                 {/* Editor */}
-                <div className="p-6">
-                    <textarea
-                        value={editText}
-                        onChange={(e) => setEditText(e.target.value)}
-                        className="w-full h-[55vh] p-4 bg-black/40 text-white text-base leading-relaxed rounded-xl border border-white/10 focus:border-white/20 focus:outline-none resize-none font-sans placeholder-zinc-500 backdrop-blur-sm"
-                        placeholder="Paste or type your script here..."
-                        autoFocus
-                    />
+                <div className="flex-1 p-4 md:p-6 overflow-hidden flex flex-col">
+                    <div className="flex-1 bg-white/90 rounded-xl overflow-hidden text-black">
+                        <ReactQuill
+                            theme="snow"
+                            value={editText}
+                            onChange={setEditText}
+                            modules={modules}
+                            className="h-full flex flex-col"
+                        />
+                    </div>
 
                     {/* Info bar */}
-                    <div className="mt-4 flex items-center justify-between text-sm">
+                    <div className="mt-4 flex items-center justify-between text-sm shrink-0">
                         <div className="flex items-center gap-4">
-                            <span className="text-zinc-500">
-                                💡 Add line breaks for easier reading
+                            <span className="text-zinc-500 hidden md:inline">
+                                💡 Use the toolbar to format your text
                             </span>
-                            <div className="flex items-center gap-2">
-                                <span className="text-zinc-400 text-xs">Text Color:</span>
-                                <input
-                                    type="color"
-                                    value={textColor}
-                                    onChange={(e) => setTextColor(e.target.value)}
-                                    className="w-10 h-8 rounded-lg cursor-pointer bg-white/5 border border-white/10 p-1 transition-all duration-200 hover:scale-105"
-                                    title="Text Color"
-                                />
-                            </div>
                         </div>
                         <span className="text-zinc-600 font-mono text-xs">
-                            {editText.length} characters
+                            {editText.length} chars
                         </span>
                     </div>
                 </div>
 
                 {/* Footer */}
                 <div
-                    className="flex items-center justify-end gap-3 px-6 py-4 border-t border-white/10"
+                    className="flex items-center justify-end gap-3 px-4 md:px-6 py-3 md:py-4 border-t border-white/10 shrink-0"
                     style={{
                         background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)',
                     }}

@@ -8,7 +8,7 @@ import { CountdownOverlay } from "./CountdownOverlay";
 
 export const PrompterContainer = () => {
     const [text, setText] = useState(
-        "Welcome to your new Prompter!\n\nPaste your script here and hit Start.\n\nYou can adjust speed, font size, and text color.\n\nGood luck with your recording!"
+        "<p>Welcome to your new Prompter!</p><br><p>Paste your script here and hit Start.</p><br><p>You can adjust speed, font size, and text color.</p><br><p>Good luck with your recording!</p>"
     );
     const [speed, setSpeed] = useState(20);
     const [fontSize, setFontSize] = useState(60);
@@ -16,7 +16,7 @@ export const PrompterContainer = () => {
     const [isMirrored, setIsMirrored] = useState(false);
     const [isReversed, setIsReversed] = useState(false);
     const [textColor, setTextColor] = useState("#ffffff");
-    const [isRecordingEnabled, setIsRecordingEnabled] = useState(false);
+    const [isRecordingEnabled, setIsRecordingEnabled] = useState(true);
     const [recordingTime, setRecordingTime] = useState(0);
     const [countdownSeconds, setCountdownSeconds] = useState(3);
     const [isCountingDown, setIsCountingDown] = useState(false);
@@ -72,6 +72,7 @@ export const PrompterContainer = () => {
                 onRecordingTimeUpdate={handleRecordingTimeUpdate}
                 videoDeviceId={selectedVideoDevice}
                 audioDeviceId={selectedAudioDevice}
+                isCameraEnabled={isRecordingEnabled}
             />
 
             <TextLayer
@@ -98,8 +99,6 @@ export const PrompterContainer = () => {
                 setIsMirrored={setIsMirrored}
                 isReversed={isReversed}
                 setIsReversed={setIsReversed}
-                textColor={textColor}
-                setTextColor={setTextColor}
                 isRecordingEnabled={isRecordingEnabled}
                 setIsRecordingEnabled={setIsRecordingEnabled}
                 recordingTime={recordingTime}

@@ -96,11 +96,10 @@ export const TextLayer: React.FC<TextLayerProps> = ({
 
             <div
                 ref={contentRef}
-                className="max-w-4xl text-center font-bold leading-relaxed transition-colors duration-300 whitespace-pre-wrap"
+                className="max-w-4xl text-center font-bold leading-relaxed transition-colors duration-300 whitespace-pre-wrap ql-editor-content"
                 style={{ fontSize: `${fontSize}px`, color: textColor }}
-            >
-                {text}
-            </div>
+                dangerouslySetInnerHTML={{ __html: text }}
+            />
 
             <div className="h-[100vh] w-full shrink-0" />
         </div>

@@ -69,7 +69,7 @@ export const DeviceSettingsModal: React.FC<DeviceSettingsModalProps> = ({
 
             {/* Modal */}
             <div
-                className="relative w-full max-w-2xl rounded-2xl overflow-hidden shadow-2xl border border-white/10"
+                className="relative w-[95%] md:w-full max-w-2xl rounded-2xl overflow-hidden shadow-2xl border border-white/10"
                 style={{
                     background: 'linear-gradient(135deg, rgba(0,0,0,0.8) 0%, rgba(20,20,20,0.9) 100%)',
                     backdropFilter: 'blur(20px)',
@@ -78,13 +78,13 @@ export const DeviceSettingsModal: React.FC<DeviceSettingsModalProps> = ({
 
                 {/* Header */}
                 <div
-                    className="flex items-center justify-between px-6 py-4 border-b border-white/10"
+                    className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4 border-b border-white/10"
                     style={{
                         background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)',
                     }}
                 >
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-600/20 flex items-center justify-center text-blue-400 border border-blue-500/30 backdrop-blur-md">
+                        <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white border border-white/10 backdrop-blur-md">
                             <CameraIcon />
                         </div>
                         <div>
@@ -103,7 +103,7 @@ export const DeviceSettingsModal: React.FC<DeviceSettingsModalProps> = ({
                 </div>
 
                 {/* Content */}
-                <div className="p-6 space-y-6">
+                <div className="p-4 md:p-6 space-y-4 md:space-y-6">
                     {/* Camera Selection */}
                     <div>
                         <label className="flex items-center gap-2 text-sm font-medium text-white mb-3">
@@ -145,7 +145,7 @@ export const DeviceSettingsModal: React.FC<DeviceSettingsModalProps> = ({
 
                 {/* Footer */}
                 <div
-                    className="flex items-center justify-end gap-3 px-6 py-4 border-t border-white/10"
+                    className="flex items-center justify-end gap-3 px-4 md:px-6 py-3 md:py-4 border-t border-white/10"
                     style={{
                         background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)',
                     }}
