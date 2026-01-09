@@ -1,36 +1,114 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CueFlow
 
-## Getting Started
+**Free Online Teleprompter with Camera Recording**
 
-First, run the development server:
+A professional web-based teleprompter application with real-time camera recording, adjustable scrolling speed, customizable text, and mirror mode. Built with Next.js 16, React 19, and TypeScript.
+
+🌐 **Live Demo**: [cueflow.harda.dev](https://cueflow.harda.dev)
+
+---
+
+## ✨ Features
+
+- 📝 **Adjustable Scrolling Speed** - Control text scroll speed in real-time
+- 🔤 **Customizable Font Size** - Adjust text size for readability
+- 🎨 **Text Color Selection** - Choose from preset colors or custom picker
+- 🪞 **Mirror Mode** - Flip text horizontally for real teleprompter setups
+- 🔄 **Reverse Scroll** - Scroll up or down
+- 🎥 **Camera Recording** - Record video with audio directly in browser
+- ⏱️ **Countdown Timer** - Configurable countdown before recording
+- 📱 **Responsive Design** - Works on desktop and mobile
+- 🌙 **Dark Theme** - Easy on the eyes
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- npm or yarn
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/hardaistee/cueflow.git
+
+# Navigate to project directory
+cd cueflow
+
+# Install dependencies
+npm install
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Build for Production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🛠️ Tech Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| Next.js | 16.1.1 | React Framework |
+| React | 19.2.3 | UI Library |
+| TypeScript | 5.x | Type Safety |
+| Tailwind CSS | 3.4.19 | Styling |
+| Geist Font | - | Typography |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 📁 Project Structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+src/
+├── app/
+│   ├── layout.tsx      # Root layout + SEO metadata
+│   ├── page.tsx        # Main page
+│   ├── sitemap.ts      # Dynamic sitemap
+│   ├── robots.ts       # Robots.txt
+│   └── globals.css     # Global styles
+└── components/
+    └── prompter/
+        ├── PrompterContainer.tsx   # Main state management
+        ├── ControlPanel.tsx        # UI controls
+        ├── TextLayer.tsx           # Scrolling text display
+        ├── CameraLayer.tsx         # Camera & recording
+        ├── TextEditorModal.tsx     # Script editor
+        ├── DeviceSettingsModal.tsx # Camera/mic selection
+        └── CountdownOverlay.tsx    # Countdown display
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+
+## 📄 License
+
+MIT License - feel free to use this project for personal or commercial purposes.
+
+---
+
+## 👤 Author
+
+**harda.dev**
+
+- Website: [harda.dev](https://harda.dev)
+- GitHub: [@hardaistee](https://github.com/hardaistee)
+
+---
+
+## ☕ Support
+
+If you find this project useful, consider buying me a coffee!
+
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/hardaistee)
