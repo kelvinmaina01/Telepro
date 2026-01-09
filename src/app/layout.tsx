@@ -13,20 +13,20 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Prompter - Professional Teleprompter with Camera Recording",
+  title: "CueFlow",
   description: "Free online teleprompter with camera recording, adjustable speed, customizable text, and mirror mode. Perfect for video creators, presenters, and content creators.",
-  keywords: ["teleprompter", "online teleprompter", "camera recording", "video recording", "prompter", "script reader", "video production", "content creation"],
+  keywords: ["teleprompter", "online teleprompter", "camera recording", "video recording", "cueflow", "prompter", "script reader", "video production", "content creation"],
   authors: [{ name: "harda.dev", url: "https://harda.dev" }],
   creator: "harda.dev",
   openGraph: {
-    title: "Prompter - Professional Teleprompter with Camera Recording",
+    title: "CueFlow",
     description: "Free online teleprompter with camera recording, adjustable speed, and customizable text. Perfect for video creators and presenters.",
     type: "website",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Prompter - Professional Teleprompter",
+    title: "CueFlow",
     description: "Free online teleprompter with camera recording and customizable features",
     creator: "@hardaistee",
   },

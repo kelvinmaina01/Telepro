@@ -4,7 +4,10 @@ import React, { useEffect, useRef, useState } from "react";
 
 interface CameraLayerProps {
   isRecording: boolean;
+  shouldStopRecording: boolean;
+  onRecordingStopped: () => void;
   onRecordingTimeUpdate: (seconds: number) => void;
+  onCameraError?: () => void;
   videoDeviceId?: string;
   audioDeviceId?: string;
   isCameraEnabled: boolean;
@@ -12,7 +15,10 @@ interface CameraLayerProps {
 
 export const CameraLayer: React.FC<CameraLayerProps> = ({
   isRecording,
+  shouldStopRecording,
+  onRecordingStopped,
   onRecordingTimeUpdate,
+  onCameraError,
   videoDeviceId,
   audioDeviceId,
   isCameraEnabled,
@@ -27,6 +33,17 @@ export const CameraLayer: React.FC<CameraLayerProps> = ({
   const recordingIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const isRecordingRef = useRef(false);
   const mimeTypeRef = useRef<string>("video/webm");
+  const onRecordingStoppedRef = useRef(onRecordingStopped);
+  const onCameraErrorRef = useRef(onCameraError);
+
+  // Keep callback refs updated
+  useEffect(() => {
+    onRecordingStoppedRef.current = onRecordingStopped;
+  }, [onRecordingStopped]);
+
+  useEffect(() => {
+    onCameraErrorRef.current = onCameraError;
+  }, [onCameraError]);
 
   // Initialize or stop camera based on isCameraEnabled
   useEffect(() => {
@@ -83,41 +100,34 @@ export const CameraLayer: React.FC<CameraLayerProps> = ({
             break;
           }
         }
-        console.log(`Camera ready. Will use MIME type: ${mimeTypeRef.current}`);
 
         setIsStreamReady(true);
         setError(null);
-      } catch (err) {
-        console.error("Error accessing camera:", err);
+      } catch {
         setError("Camera access denied or unavailable.");
+        // Notify parent to disable recording
+        if (onCameraErrorRef.current) {
+          onCameraErrorRef.current();
+        }
       }
     };
 
     startCamera();
 
     return () => {
-      // Cleanup on unmount or dependency change is handled by the start of the effect for the *next* run
-      // or here if we want to be safe. 
-      // Actually, we should cleanup normally here too.
       if (streamRef.current) {
-        // Don't stop tracks here if we are just re-rendering, but in this case simple cleanup is safer
-        // However, React Strict Mode might double invoke.
-        // Let's rely on the check at the start of the function and this cleanup.
         streamRef.current.getTracks().forEach((track) => track.stop());
       }
     };
   }, [videoDeviceId, audioDeviceId, isCameraEnabled]);
 
-  // Handle recording state changes
+  // Handle starting recording
   useEffect(() => {
-    if (!isStreamReady || !streamRef.current) return;
+    if (!isStreamReady || !streamRef.current || !isRecording) return;
+    if (isRecordingRef.current) return; // Already recording
 
     const startRecording = () => {
-      if (isRecordingRef.current) return; // Already recording
-
       try {
-        console.log("Starting recording...");
-
         const recorder = new MediaRecorder(streamRef.current!, {
           mimeType: mimeTypeRef.current,
           audioBitsPerSecond: 128000,
@@ -139,36 +149,29 @@ export const CameraLayer: React.FC<CameraLayerProps> = ({
 
         recorder.ondataavailable = (e) => {
           if (e.data && e.data.size > 0) {
-            console.log(`Chunk received: ${e.data.size} bytes`);
             chunksRef.current.push(e.data);
           }
         };
 
-        recorder.onerror = (e) => {
-          console.error("Recorder Error:", e);
+        recorder.onerror = () => {
+          // Silent error handling
         };
 
         recorder.onstop = () => {
-          console.log(`Recorder stopped. Total chunks: ${chunksRef.current.length}`);
-
           if (chunksRef.current.length === 0) {
-            console.error("No chunks recorded!");
+            onRecordingStoppedRef.current();
             return;
           }
 
           const blob = new Blob(chunksRef.current, { type: mimeTypeRef.current });
-          console.log(`Created blob: ${blob.size} bytes`);
 
           if (blob.size === 0) {
-            console.error("Blob size is 0!");
+            onRecordingStoppedRef.current();
             return;
           }
 
           const url = URL.createObjectURL(blob);
-          const extension = mimeTypeRef.current.includes("mp4") ? "mp4" : "webm";
-          const filename = `prompter-recording-${Date.now()}.${extension}`;
-
-          console.log(`Downloading: ${filename}`);
+          const filename = `cueflow-recording-${Date.now()}.mp4`;
 
           const a = document.createElement("a");
           a.style.display = "none";
@@ -184,42 +187,42 @@ export const CameraLayer: React.FC<CameraLayerProps> = ({
           }, 100);
 
           chunksRef.current = [];
-          onRecordingTimeUpdate(0);
           isRecordingRef.current = false;
+
+          // Notify parent that recording has stopped
+          onRecordingStoppedRef.current();
         };
 
         // Start recording with timeslice for regular data chunks
         recorder.start(1000);
-        console.log("Recording started successfully");
 
-      } catch (e) {
-        console.error("Failed to start recording:", e);
+      } catch {
         setError("Recording failed to start.");
         isRecordingRef.current = false;
       }
     };
 
-    const stopRecording = () => {
-      if (!isRecordingRef.current) return; // Not recording
-
-      console.log("Stopping recording...");
-
-      if (recordingIntervalRef.current) {
-        clearInterval(recordingIntervalRef.current);
-        recordingIntervalRef.current = null;
-      }
-
-      if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
-        mediaRecorderRef.current.stop();
-      }
-    };
-
-    if (isRecording) {
-      startRecording();
-    } else {
-      stopRecording();
-    }
+    startRecording();
   }, [isRecording, isStreamReady, onRecordingTimeUpdate]);
+
+  // Handle stop recording signal
+  useEffect(() => {
+    if (!shouldStopRecording) return;
+    if (!isRecordingRef.current) {
+      // Not recording, just notify parent
+      onRecordingStoppedRef.current();
+      return;
+    }
+
+    if (recordingIntervalRef.current) {
+      clearInterval(recordingIntervalRef.current);
+      recordingIntervalRef.current = null;
+    }
+
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
+      mediaRecorderRef.current.stop();
+    }
+  }, [shouldStopRecording]);
 
   if (error && isCameraEnabled) {
     return (

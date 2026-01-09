@@ -1,8 +1,4 @@
 "use client";
-import dynamic from 'next/dynamic';
-import 'react-quill-new/dist/quill.snow.css';
-
-const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
 
 import React, { useState, useEffect } from "react";
 
@@ -11,6 +7,8 @@ interface TextEditorModalProps {
     onClose: () => void;
     text: string;
     onSave: (text: string) => void;
+    textColor: string;
+    setTextColor: (color: string) => void;
 }
 
 const CloseIcon = () => (
@@ -25,11 +23,24 @@ const SaveIcon = () => (
     </svg>
 );
 
+const colorPresets = [
+    { name: "White", value: "#ffffff" },
+    { name: "Yellow", value: "#fbbf24" },
+    { name: "Green", value: "#34d399" },
+    { name: "Cyan", value: "#22d3ee" },
+    { name: "Blue", value: "#60a5fa" },
+    { name: "Pink", value: "#f472b6" },
+    { name: "Red", value: "#f87171" },
+    { name: "Orange", value: "#fb923c" },
+];
+
 export const TextEditorModal: React.FC<TextEditorModalProps> = ({
     isOpen,
     onClose,
     text,
     onSave,
+    textColor,
+    setTextColor,
 }) => {
     const [editText, setEditText] = useState(text);
 
@@ -44,15 +55,9 @@ export const TextEditorModal: React.FC<TextEditorModalProps> = ({
         onClose();
     };
 
-    const modules = {
-        toolbar: [
-            [{ 'header': [1, 2, false] }],
-            ['bold', 'italic', 'underline', 'strike'],
-            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-            [{ 'color': [] }, { 'background': [] }],
-            ['clean']
-        ],
-    };
+    // Calculate word and line count
+    const wordCount = editText.trim() ? editText.trim().split(/\s+/).length : 0;
+    const lineCount = editText.split('\n').length;
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-6">
@@ -90,28 +95,59 @@ export const TextEditorModal: React.FC<TextEditorModalProps> = ({
                     </button>
                 </div>
 
+                {/* Color Picker */}
+                <div className="px-4 md:px-6 py-3 border-b border-white/10 shrink-0">
+                    <div className="flex items-center gap-3 flex-wrap">
+                        <span className="text-sm text-zinc-400">Text Color:</span>
+                        <div className="flex items-center gap-2 flex-wrap">
+                            {colorPresets.map((color) => (
+                                <button
+                                    key={color.value}
+                                    onClick={() => setTextColor(color.value)}
+                                    className={`w-7 h-7 rounded-full border-2 transition-all duration-200 ${textColor === color.value
+                                        ? 'border-white scale-110'
+                                        : 'border-white/20 hover:border-white/50'
+                                        }`}
+                                    style={{ backgroundColor: color.value }}
+                                    title={color.name}
+                                />
+                            ))}
+                            <input
+                                type="color"
+                                value={textColor}
+                                onChange={(e) => setTextColor(e.target.value)}
+                                className="w-7 h-7 rounded-full cursor-pointer border-2 border-white/20 hover:border-white/50"
+                                title="Custom color"
+                            />
+                        </div>
+                    </div>
+                </div>
+
                 {/* Editor */}
                 <div className="flex-1 p-4 md:p-6 overflow-hidden flex flex-col">
-                    <div className="flex-1 bg-white/90 rounded-xl overflow-hidden text-black">
-                        <ReactQuill
-                            theme="snow"
-                            value={editText}
-                            onChange={setEditText}
-                            modules={modules}
-                            className="h-full flex flex-col"
-                        />
-                    </div>
+                    <textarea
+                        value={editText}
+                        onChange={(e) => setEditText(e.target.value)}
+                        placeholder="Paste or type your script here..."
+                        className="flex-1 w-full bg-zinc-900/80 text-white rounded-xl p-4 resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500/50 border border-white/10 text-lg leading-relaxed"
+                        style={{
+                            minHeight: '300px',
+                        }}
+                    />
 
                     {/* Info bar */}
                     <div className="mt-4 flex items-center justify-between text-sm shrink-0">
                         <div className="flex items-center gap-4">
                             <span className="text-zinc-500 hidden md:inline">
-                                💡 Use the toolbar to format your text
+
+                                Tip: Each line appears as a separate paragraph on screen
                             </span>
                         </div>
-                        <span className="text-zinc-600 font-mono text-xs">
-                            {editText.length} chars
-                        </span>
+                        <div className="flex items-center gap-4 text-zinc-600 font-mono text-xs">
+                            <span>{wordCount} words</span>
+                            <span>{lineCount} lines</span>
+                            <span>{editText.length} characters</span>
+                        </div>
                     </div>
                 </div>
 

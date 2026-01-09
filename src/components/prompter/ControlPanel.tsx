@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { TextEditorModal } from "./TextEditorModal";
 import { DeviceSettingsModal } from "./DeviceSettingsModal";
 
@@ -28,6 +28,9 @@ interface ControlPanelProps {
     selectedVideoDevice: string;
     selectedAudioDevice: string;
     onDeviceChange: (videoDeviceId: string, audioDeviceId: string) => void;
+    textColor: string;
+    setTextColor: (val: string) => void;
+    hasStarted: boolean;
 }
 
 const formatTime = (seconds: number): string => {
@@ -35,6 +38,18 @@ const formatTime = (seconds: number): string => {
     const mins = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
     return `${hrs.toString().padStart(2, "0")}:${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+};
+
+const formatReadingTime = (minutes: number): string => {
+    if (minutes < 1) {
+        return "<1 dk";
+    } else if (minutes < 60) {
+        return `~${Math.round(minutes)} dk`;
+    } else {
+        const hrs = Math.floor(minutes / 60);
+        const mins = Math.round(minutes % 60);
+        return `~${hrs}s ${mins}dk`;
+    }
 };
 
 export const ControlPanel: React.FC<ControlPanelProps> = ({
@@ -61,9 +76,61 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
     selectedVideoDevice,
     selectedAudioDevice,
     onDeviceChange,
+    textColor,
+    setTextColor,
+    hasStarted,
 }) => {
     const [isEditorOpen, setIsEditorOpen] = useState(false);
     const [isDeviceSettingsOpen, setIsDeviceSettingsOpen] = useState(false);
+
+    // Local state for inputs - allows free typing
+    const [speedInput, setSpeedInput] = useState(speed.toString());
+    const [fontSizeInput, setFontSizeInput] = useState(fontSize.toString());
+    const [countdownInput, setCountdownInput] = useState(countdownSeconds.toString());
+
+    // Sync local inputs with props when they change externally
+    React.useEffect(() => {
+        setSpeedInput(speed.toString());
+    }, [speed]);
+
+    React.useEffect(() => {
+        setFontSizeInput(fontSize.toString());
+    }, [fontSize]);
+
+    React.useEffect(() => {
+        setCountdownInput(countdownSeconds.toString());
+    }, [countdownSeconds]);
+
+    // Calculate estimated reading time (average 150 words per minute for teleprompter)
+    const estimatedReadingTime = useMemo(() => {
+        const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0;
+        // Adjust based on speed - base speed of 20 = 150 wpm
+        const adjustedWpm = (speed / 20) * 150;
+        const minutes = wordCount / adjustedWpm;
+        return formatReadingTime(minutes);
+    }, [text, speed]);
+
+    // Handle blur - validate and apply
+    const handleSpeedBlur = () => {
+        const val = parseInt(speedInput) || 1;
+        const clamped = Math.max(1, Math.min(100, val));
+        setSpeed(clamped);
+        setSpeedInput(clamped.toString());
+    };
+
+    const handleFontSizeBlur = () => {
+        const val = parseInt(fontSizeInput) || 20;
+        const clamped = Math.max(20, Math.min(200, val));
+        setFontSize(clamped);
+        setFontSizeInput(clamped.toString());
+    };
+
+    const handleCountdownBlur = () => {
+        const val = parseInt(countdownInput) || 0;
+        const clamped = Math.max(0, Math.min(30, val));
+        setCountdownSeconds(clamped);
+        setCountdownInput(clamped.toString());
+    };
 
     return (
         <>
@@ -81,8 +148,8 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                     <button
                         onClick={onPlayPause}
                         className={`shrink-0 relative w-12 h-12 rounded-xl transition-all duration-300 overflow-hidden group backdrop-blur-md ${isPlaying
-                            ? "bg-gradient-to-br from-amber-500/80 to-orange-600/80 hover:from-amber-400/90 hover:to-orange-500/90"
-                            : "bg-gradient-to-br from-emerald-500/80 to-green-600/80 hover:from-emerald-400/90 hover:to-green-500/90"
+                            ? "bg-amber-500/80 hover:bg-amber-400/90"
+                            : "bg-emerald-500/80 hover:bg-emerald-400/90"
                             } shadow-lg hover:shadow-xl hover:scale-110 active:scale-95 border border-white/10`}
                         title={isPlaying ? "Pause" : "Play"}
                     >
@@ -109,12 +176,13 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                                 <path d="M12 6v6l4 2" />
                             </svg>
                             <input
-                                type="number"
-                                min="1"
-                                max="100"
-                                value={speed}
-                                onChange={(e) => setSpeed(Math.max(1, Math.min(100, Number(e.target.value))))}
-                                className="w-9 bg-transparent text-white text-center text-sm font-bold outline-none"
+                                type="text"
+                                inputMode="numeric"
+                                pattern="[0-9]*"
+                                value={speedInput}
+                                onChange={(e) => setSpeedInput(e.target.value.replace(/[^0-9]/g, ''))}
+                                onBlur={handleSpeedBlur}
+                                className="w-9 bg-transparent text-white text-center text-base font-bold outline-none"
                                 aria-label="Kaydırma Hızı"
                             />
                         </div>
@@ -125,12 +193,13 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                                 <path d="M9 4v3h5v12h3V7h5V4H9zM3 12h3v7h3v-7h3V9H3v3z" />
                             </svg>
                             <input
-                                type="number"
-                                min="20"
-                                max="150"
-                                value={fontSize}
-                                onChange={(e) => setFontSize(Math.max(20, Math.min(150, Number(e.target.value))))}
-                                className="w-9 bg-transparent text-white text-center text-sm font-bold outline-none"
+                                type="text"
+                                inputMode="numeric"
+                                pattern="[0-9]*"
+                                value={fontSizeInput}
+                                onChange={(e) => setFontSizeInput(e.target.value.replace(/[^0-9]/g, ''))}
+                                onBlur={handleFontSizeBlur}
+                                className="w-9 bg-transparent text-white text-center text-base font-bold outline-none"
                                 aria-label="Yazı Boyutu"
                             />
                         </div>
@@ -193,14 +262,24 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
 
                     <div className="shrink-0 w-px h-8 bg-white/10" />
 
-                    {/* Timer */}
-                    <div className={`shrink-0 flex items-center px-4 py-2.5 rounded-xl font-mono text-sm tracking-wider ${isRecordingEnabled && isPlaying
-                        ? "bg-red-500/20 text-red-400 border border-red-500/50"
-                        : "bg-white/5 text-white border border-white/10"
-                        }`}>
-                        <span className={isRecordingEnabled && isPlaying ? "animate-pulse" : ""}>
-                            {formatTime(recordingTime)}
-                        </span>
+                    {/* Timer & Reading Time - Stacked */}
+                    <div className="shrink-0 flex flex-col gap-1">
+                        {/* Recording Timer */}
+                        <div className={`flex items-center justify-center px-3 py-1 rounded-lg font-mono text-xs tracking-wider ${isRecordingEnabled && hasStarted
+                            ? "bg-red-500/20 text-red-400 border border-red-500/50"
+                            : "bg-white/5 text-white border border-white/10"
+                            }`}>
+                            <span className={isRecordingEnabled && hasStarted && isPlaying ? "animate-pulse" : ""}>
+                                {formatTime(recordingTime)}
+                            </span>
+                        </div>
+                        {/* Estimated Reading Time */}
+                        <div className="flex items-center justify-center gap-1 px-3 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs">
+                            <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>{estimatedReadingTime}</span>
+                        </div>
                     </div>
 
                     <div className="shrink-0 w-px h-8 bg-white/10" />
@@ -218,18 +297,19 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                     </button>
 
                     {/* Countdown */}
-                    <div className="shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                    <div className="shrink-0 flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
                         <svg className="w-4 h-4 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                             <circle cx="12" cy="13" r="8" />
                             <path d="M12 9v4l2 2M5 3l2 2M19 3l-2 2M12 3v2" />
                         </svg>
                         <input
-                            type="number"
-                            min="0"
-                            max="10"
-                            value={countdownSeconds}
-                            onChange={(e) => setCountdownSeconds(Math.max(0, Math.min(10, Number(e.target.value))))}
-                            className="w-8 bg-transparent text-white text-center text-sm font-bold outline-none"
+                            type="text"
+                            inputMode="numeric"
+                            pattern="[0-9]*"
+                            value={countdownInput}
+                            onChange={(e) => setCountdownInput(e.target.value.replace(/[^0-9]/g, ''))}
+                            onBlur={handleCountdownBlur}
+                            className="w-6 bg-transparent text-white text-center text-base font-bold outline-none"
                             aria-label="Geri Sayım Süresi"
                         />
                         <span className="text-zinc-500 text-xs">s</span>
@@ -282,6 +362,8 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                 onClose={() => setIsEditorOpen(false)}
                 text={text}
                 onSave={setText}
+                textColor={textColor}
+                setTextColor={setTextColor}
             />
 
             <DeviceSettingsModal

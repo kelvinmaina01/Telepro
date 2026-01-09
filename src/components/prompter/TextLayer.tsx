@@ -22,7 +22,6 @@ export const TextLayer: React.FC<TextLayerProps> = ({
     textColor,
 }) => {
     const containerRef = useRef<HTMLDivElement>(null);
-    const contentRef = useRef<HTMLDivElement>(null);
     const animationRef = useRef<number>(0);
     const lastTimeRef = useRef<number>(0);
     const scrollAccumulator = useRef<number>(0);
@@ -81,27 +80,66 @@ export const TextLayer: React.FC<TextLayerProps> = ({
         };
     }, [isPlaying, speed, isReversed]);
 
+    // Convert plain text to paragraphs
+    const renderText = () => {
+        const lines = text.split('\n');
+        return lines.map((line, index) => (
+            <p
+                key={index}
+                style={{
+                    margin: 0,
+                    padding: '0.25em 0',
+                    minHeight: '1.2em',
+                }}
+            >
+                {line || '\u00A0'}
+            </p>
+        ));
+    };
+
     return (
         <div
             ref={containerRef}
-            className={`absolute inset-0 z-10 overflow-y-auto no-scrollbar p-8 flex flex-col items-center ${isMirrored ? "scale-x-[-1]" : ""
-                }`}
+            className={`absolute inset-0 z-10 overflow-y-auto overflow-x-hidden no-scrollbar ${isMirrored ? "scale-x-[-1]" : ""}`}
             style={{
                 perspective: "1000px",
                 scrollBehavior: "auto",
             }}
         >
-            {/* Spacer to start text deeper in the page */}
-            <div className="h-[40vh] w-full shrink-0" />
-
             <div
-                ref={contentRef}
-                className="max-w-4xl text-center font-bold leading-relaxed transition-colors duration-300 whitespace-pre-wrap ql-editor-content"
-                style={{ fontSize: `${fontSize}px`, color: textColor }}
-                dangerouslySetInnerHTML={{ __html: text }}
-            />
+                style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    minHeight: '100%',
+                    width: '100%',
+                }}
+            >
+                {/* Spacer to start text deeper in the page */}
+                <div style={{ height: '40vh', width: '100%', flexShrink: 0 }} />
 
-            <div className="h-[100vh] w-full shrink-0" />
+                <div
+                    style={{
+                        fontSize: `${fontSize}px`,
+                        color: textColor,
+                        textAlign: 'center',
+                        fontWeight: 'bold',
+                        lineHeight: 1.6,
+                        width: '100%',
+                        maxWidth: '1200px',
+                        paddingLeft: '24px',
+                        paddingRight: '24px',
+                        boxSizing: 'border-box',
+                        wordBreak: 'normal',
+                        overflowWrap: 'normal',
+                        whiteSpace: 'pre-wrap',
+                    }}
+                >
+                    {renderText()}
+                </div>
+
+                <div style={{ height: '100vh', width: '100%', flexShrink: 0 }} />
+            </div>
         </div>
     );
 };
