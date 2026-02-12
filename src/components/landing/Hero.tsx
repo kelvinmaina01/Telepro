@@ -13,14 +13,6 @@ export const Hero = () => {
             </div>
 
             <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8 animate-fade-in">
-                    <span className="relative flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
-                    </span>
-                    <span className="text-xs font-black uppercase tracking-[0.2em] text-zinc-400">Professional Grade Prompter</span>
-                </div>
-
                 <h1 className="text-6xl md:text-8xl lg:text-[120px] font-normal tracking-tighter leading-[0.9] text-white mb-8 animate-title">
                     speak with <span className="text-zinc-500">absolute</span><br />
                     confidence.
@@ -44,7 +36,7 @@ export const Hero = () => {
 
                     <Link
                         href="#features"
-                        className="px-10 h-16 bg-transparent text-white font-black text-lg rounded-2xl border border-white/10 hover:bg-white/5 transition-all active:scale-95 flex items-center justify-center"
+                        className="px-10 h-16 bg-transparent text-white font-black text-lg rounded-2xl border-2 border-white hover:bg-white hover:text-black transition-all active:scale-95 flex items-center justify-center"
                     >
                         VIEW FEATURES
                     </Link>

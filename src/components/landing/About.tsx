@@ -8,13 +8,10 @@ export const About = () => {
             <div className="max-w-7xl mx-auto px-6">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
                     <div>
-                        <h2 className="text-4xl md:text-5xl font-normal text-white tracking-tighter mb-8 italic">
+                        <h2 className="text-4xl md:text-5xl font-normal text-white tracking-tighter mb-8">
                             purpose-built for the stage.
                         </h2>
                         <div className="space-y-6">
-                            <p className="text-zinc-400 text-lg font-medium leading-relaxed">
-                                TelePro was born out of a simple frustration: most teleprompters are either too complex or too basic. We built a tool that balances professional power with an interface that gets out of your way.
-                            </p>
                             <p className="text-zinc-500 text-lg font-medium leading-relaxed">
                                 Whether you're recording a YouTube tutorial, a corporate presentation, or an online course, TelePro ensures your delivery is natural and your focus stays where it matters—on your audience.
                             </p>
@@ -43,7 +40,7 @@ export const About = () => {
 
                         {/* Floating badge */}
                         <div className="absolute -bottom-10 -left-10 p-8 bg-zinc-900 border border-white/10 rounded-3xl shadow-2xl max-w-[240px] hidden md:block">
-                            <p className="text-sm font-bold text-white italic">
+                            <p className="text-sm font-bold text-white">
                                 "The cleanest prompter interface I've used in 10 years of broadcasting."
                             </p>
                             <div className="mt-4 flex items-center gap-3">
