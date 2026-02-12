@@ -3,38 +3,6 @@
 import React from "react";
 import Link from "next/link";
 
-const tiers = [
-    {
-        name: "Starter",
-        price: "Free",
-        description: "Perfect for casual creators and beginners.",
-        features: [
-            "Up to 2,000 words per script",
-            "30 min max recording duration",
-            "Default & OBS Camera access",
-            "Standard Export",
-            "No account required",
-        ],
-        cta: "Start for Free",
-        highlight: false,
-    },
-    {
-        name: "Professional",
-        price: "$3.99",
-        description: "Everything you need for serious production.",
-        features: [
-            "Unlimited script length",
-            "No recording time limits",
-            "DroidCam & Pro Cam support",
-            "4K High-bitrate Export",
-            "Custom script themes",
-            "Priority Support",
-        ],
-        cta: "Upgrade to Pro",
-        highlight: true,
-    },
-];
-
 export const Pricing = () => {
     const [isYearly, setIsYearly] = React.useState(false);
 
