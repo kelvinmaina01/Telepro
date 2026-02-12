@@ -1,9 +1,19 @@
-import { PrompterContainer } from "@/components/prompter/PrompterContainer";
+import { Navbar } from "@/components/landing/Navbar";
+import { Hero } from "@/components/landing/Hero";
+import { Features } from "@/components/landing/Features";
+import { Pricing } from "@/components/landing/Pricing";
+import { Footer } from "@/components/landing/Footer";
 
-export default function Home() {
+export default function LandingPage() {
   return (
-    <main>
-      <PrompterContainer />
-    </main>
+    <div className="bg-black min-h-screen text-white selection:bg-white selection:text-black">
+      <Navbar />
+      <main>
+        <Hero />
+        <Features />
+        <Pricing />
+      </main>
+      <Footer />
+    </div>
   );
 }

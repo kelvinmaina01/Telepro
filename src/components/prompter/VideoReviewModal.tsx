@@ -44,7 +44,7 @@ export const VideoReviewModal: React.FC<VideoReviewModalProps> = ({
 
             {/* Modal */}
             <div
-                className="relative w-full max-w-4xl bg-[#0f0f0f] rounded-3xl overflow-hidden border border-white/10 shadow-2xl flex flex-col max-h-[90vh]"
+                className="relative w-full max-w-4xl bg-[#0f0f0f] rounded-3xl overflow-hidden border border-white/10 shadow-2xl flex flex-col h-[80vh] max-h-[90vh]"
                 style={{
                     boxShadow: '0 0 50px -12px rgba(30, 58, 138, 0.4)',
                 }}

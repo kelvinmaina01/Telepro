@@ -6,6 +6,7 @@ import { TextLayer } from "./TextLayer";
 import { ControlPanel } from "./ControlPanel";
 import { CountdownOverlay } from "./CountdownOverlay";
 import { VideoReviewModal } from "./VideoReviewModal";
+import { OnboardingModal } from "./OnboardingModal";
 
 const DEFAULT_SCRIPT = `Welcome to TelePro!
 
@@ -225,6 +226,8 @@ export const PrompterContainer = () => {
                 onReRecord={handleReRecord}
                 onDiscard={handleDiscard}
             />
+
+            <OnboardingModal />
         </div>
     );
 };
