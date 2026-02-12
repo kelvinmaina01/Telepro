@@ -7,16 +7,24 @@ import { ControlPanel } from "./ControlPanel";
 import { CountdownOverlay } from "./CountdownOverlay";
 import { VideoReviewModal } from "./VideoReviewModal";
 
-export const PrompterContainer = () => {
-    const [text, setText] = useState(
-        `Welcome to TelePro!
+const DEFAULT_SCRIPT = `Welcome to TelePro!
 
 Paste your script here and hit Start.
 
 You can adjust speed, font size, and text color.
 
-Good luck with your recording!`
-    );
+Good luck with your recording!`;
+
+export const PrompterContainer = () => {
+    const [text, setText] = useState(DEFAULT_SCRIPT);
+
+    // Default text fallback
+    React.useEffect(() => {
+        if (!text.trim()) {
+            setText(DEFAULT_SCRIPT);
+        }
+    }, [text]);
+
     const [speed, setSpeed] = useState(20);
     const [fontSize, setFontSize] = useState(60);
     const [isPlaying, setIsPlaying] = useState(false); // Controls text scrolling
