@@ -137,7 +137,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
             {/* Main Toolbar */}
             <div className="fixed bottom-12 left-1/2 -translate-x-1/2 z-40 w-[98%] md:w-auto max-w-[1200px]">
                 <div
-                    className="flex items-center gap-2 md:gap-5 px-4 md:px-8 py-3 md:py-5 rounded-3xl backdrop-blur-3xl border border-white/10 shadow-2xl overflow-x-auto no-scrollbar scroll-smooth"
+                    className="flex items-center gap-2 md:gap-5 px-4 md:px-8 pt-10 pb-3 md:pt-12 md:pb-5 rounded-3xl backdrop-blur-3xl border border-white/10 shadow-2xl overflow-x-auto md:overflow-visible no-scrollbar scroll-smooth"
                     style={{
                         background: 'linear-gradient(135deg, rgba(0,0,0,0.8) 0%, rgba(20,20,20,0.9) 100%)',
                         boxShadow: '0 20px 50px -12px rgba(0, 0, 0, 0.7), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1)',
