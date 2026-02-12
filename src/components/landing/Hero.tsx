@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export const Hero = () => {
     return (
-        <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+        <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-40">
             {/* Animated Background Elements */}
             <div className="absolute inset-0 z-0">
                 <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/5 blur-[120px] rounded-full animate-pulse" />
@@ -26,9 +26,9 @@ export const Hero = () => {
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-6 animate-fade-up delay-200">
                     <Link
                         href="/prompter"
-                        className="group relative px-10 h-16 bg-white text-black font-black text-lg rounded-2xl hover:scale-[1.02] transition-all active:scale-95 flex items-center justify-center shadow-[0_0_30px_rgba(255,255,255,0.2)]"
+                        className="group relative px-10 h-16 bg-white text-black font-normal text-lg rounded-2xl hover:scale-[1.02] transition-all active:scale-95 flex items-center justify-center shadow-[0_0_30px_rgba(255,255,255,0.2)] lowercase"
                     >
-                        START RECORDING
+                        start recording
                         <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                             <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
@@ -36,17 +36,17 @@ export const Hero = () => {
 
                     <Link
                         href="#features"
-                        className="px-10 h-16 bg-transparent text-white font-black text-lg rounded-2xl border-2 border-white hover:bg-white hover:text-black transition-all active:scale-95 flex items-center justify-center"
+                        className="px-10 h-16 bg-transparent text-white font-normal text-lg rounded-2xl border-2 border-white hover:bg-white hover:text-black transition-all active:scale-95 flex items-center justify-center lowercase"
                     >
-                        VIEW FEATURES
+                        view features
                     </Link>
                 </div>
 
-                <div className="mt-20 pt-20 border-t border-white/5 grid grid-cols-2 md:grid-cols-4 gap-8 opacity-50 grayscale contrast-125">
-                    <div className="text-sm font-black tracking-widest uppercase">Recording</div>
-                    <div className="text-sm font-black tracking-widest uppercase">Playback</div>
-                    <div className="text-sm font-black tracking-widest uppercase">Scripting</div>
-                    <div className="text-sm font-black tracking-widest uppercase">Mirroring</div>
+                <div className="mt-20 pt-20 border-t border-white/5 grid grid-cols-2 md:grid-cols-4 gap-8 opacity-50 grayscale contrast-125 lowercase">
+                    <div className="text-sm font-normal tracking-widest">recording</div>
+                    <div className="text-sm font-normal tracking-widest">playback</div>
+                    <div className="text-sm font-normal tracking-widest">scripting</div>
+                    <div className="text-sm font-normal tracking-widest">mirroring</div>
                 </div>
             </div>
 

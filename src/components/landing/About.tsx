@@ -17,37 +17,36 @@ export const About = () => {
                             </p>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-8 mt-12">
+                        <div className="grid grid-cols-2 gap-8 mt-12 lowercase">
                             <div>
-                                <div className="text-3xl font-black text-white mb-2">99.9%</div>
-                                <div className="text-xs font-black uppercase tracking-widest text-zinc-600">Sync Accuracy</div>
+                                <div className="text-3xl font-normal text-white mb-2">99.9%</div>
+                                <div className="text-xs font-normal tracking-widest text-zinc-600">sync accuracy</div>
                             </div>
                             <div>
-                                <div className="text-3xl font-black text-white mb-2">4K</div>
-                                <div className="text-xs font-black uppercase tracking-widest text-zinc-600">Ready Feed</div>
+                                <div className="text-3xl font-normal text-white mb-2">4k</div>
+                                <div className="text-xs font-normal tracking-widest text-zinc-600">ready feed</div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="relative">
-                        <div className="aspect-square bg-white shadow-[0_0_80px_rgba(255,255,255,0.05)] rounded-[40px] flex items-center justify-center overflow-hidden border border-white/10 group">
-                            {/* Decorative minimalist elements */}
-                            <div className="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-all duration-700" />
-                            <div className="w-1/2 h-px bg-white/20 absolute top-1/2 left-0" />
-                            <div className="w-px h-1/2 bg-white/20 absolute top-0 left-1/2" />
-                            <div className="text-[200px] font-black text-white/5 select-none pointer-events-none">PRO</div>
+                    <div className="relative group">
+                        <div className="aspect-video w-full bg-zinc-900 rounded-[32px] overflow-hidden border border-white/10 shadow-2xl relative">
+                            {/* YouTube Embed Placeholder */}
+                            <iframe
+                                className="absolute inset-0 w-full h-full"
+                                src="https://www.youtube.com/embed/dQw4w9WgXcQ?controls=0&rel=0"
+                                title="TelePro Demo"
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                            />
+
+                            {/* Subtle overlay to match aesthetics when not playing */}
+                            <div className="absolute inset-0 bg-black/10 pointer-events-none group-hover:bg-transparent transition-all duration-700" />
                         </div>
 
-                        {/* Floating badge */}
-                        <div className="absolute -bottom-10 -left-10 p-8 bg-zinc-900 border border-white/10 rounded-3xl shadow-2xl max-w-[240px] hidden md:block">
-                            <p className="text-sm font-bold text-white">
-                                "The cleanest prompter interface I've used in 10 years of broadcasting."
-                            </p>
-                            <div className="mt-4 flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-full bg-zinc-800" />
-                                <div className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Industry Leader</div>
-                            </div>
-                        </div>
+                        {/* Decorative background glow */}
+                        <div className="absolute -inset-4 bg-white/5 blur-2xl rounded-[40px] -z-10 group-hover:bg-white/10 transition-all" />
                     </div>
                 </div>
             </div>
