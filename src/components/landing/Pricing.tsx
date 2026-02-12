@@ -13,7 +13,7 @@ export const Pricing = () => {
         <section id="pricing" className="py-32 bg-black relative">
             <div className="max-w-7xl mx-auto px-6">
                 <div className="text-center mb-12">
-                    <h2 className="text-4xl md:text-5xl font-black text-white tracking-tighter mb-6">SIMPLE PRICING</h2>
+                    <h2 className="text-4xl md:text-5xl font-normal text-white tracking-tighter mb-6">simple pricing</h2>
                     <p className="text-zinc-500 max-w-xl mx-auto font-medium mb-12">
                         Start for free, upgrade when you're ready for more. No hidden fees.
                     </p>

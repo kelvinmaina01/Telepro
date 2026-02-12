@@ -71,7 +71,7 @@ export const Features = () => {
         <section id="features" className="py-32 bg-[#050505] relative">
             <div className="max-w-7xl mx-auto px-6">
                 <div className="text-center mb-20">
-                    <h2 className="text-4xl md:text-5xl font-black text-white tracking-tighter mb-6">ALL-IN-ONE PROMPTER</h2>
+                    <h2 className="text-4xl md:text-5xl font-normal text-white tracking-tighter mb-6">all-in-one prompter</h2>
                     <p className="text-zinc-500 max-w-xl mx-auto font-medium">
                         Everything you need to deliver world-class presentations without missing a single beat.
                     </p>

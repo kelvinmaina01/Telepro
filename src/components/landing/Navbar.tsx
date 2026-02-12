@@ -15,9 +15,9 @@ export const Navbar = () => {
                 </Link>
 
                 <div className="hidden md:flex items-center gap-8">
-                    <Link href="#features" className="text-sm font-bold text-zinc-400 hover:text-white transition-colors">Features</Link>
-                    <Link href="#pricing" className="text-sm font-bold text-zinc-400 hover:text-white transition-colors">Pricing</Link>
-                    <Link href="#about" className="text-sm font-bold text-zinc-400 hover:text-white transition-colors">About</Link>
+                    <a href="#features" className="text-sm font-bold text-zinc-400 hover:text-white transition-colors">Features</a>
+                    <a href="#pricing" className="text-sm font-bold text-zinc-400 hover:text-white transition-colors">Pricing</a>
+                    <a href="#about" className="text-sm font-bold text-zinc-400 hover:text-white transition-colors">About</a>
                 </div>
 
                 <Link

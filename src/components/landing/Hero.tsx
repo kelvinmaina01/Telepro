@@ -21,10 +21,9 @@ export const Hero = () => {
                     <span className="text-xs font-black uppercase tracking-[0.2em] text-zinc-400">Professional Grade Prompter</span>
                 </div>
 
-                <h1 className="text-6xl md:text-8xl lg:text-[120px] font-black tracking-tighter leading-[0.9] text-white mb-8 animate-title">
-                    SPEAK WITH<br />
-                    <span className="text-zinc-500">ABSOLUTE</span><br />
-                    CONFIDENCE.
+                <h1 className="text-6xl md:text-8xl lg:text-[120px] font-normal tracking-tighter leading-[0.9] text-white mb-8 animate-title">
+                    speak with <span className="text-zinc-500">absolute</span><br />
+                    confidence.
                 </h1>
 
                 <p className="max-w-2xl mx-auto text-lg md:text-xl text-zinc-400 mb-12 font-medium leading-relaxed animate-fade-up">
