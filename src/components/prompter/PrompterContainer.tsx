@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 import { CameraLayer } from "./CameraLayer";
 import { TextLayer } from "./TextLayer";
 import { ControlPanel } from "./ControlPanel";
@@ -17,14 +19,9 @@ You can adjust speed, font size, and text color.
 Good luck with your recording!`;
 
 export const PrompterContainer = () => {
+    const { user, loading } = useAuth();
+    const router = useRouter();
     const [text, setText] = useState(DEFAULT_SCRIPT);
-
-    // Default text fallback
-    React.useEffect(() => {
-        if (!text.trim()) {
-            setText(DEFAULT_SCRIPT);
-        }
-    }, [text]);
 
     const [speed, setSpeed] = useState(20);
     const [fontSize, setFontSize] = useState(60);
@@ -112,6 +109,13 @@ export const PrompterContainer = () => {
 
     const handleDownload = useCallback(() => {
         if (!recordedVideoUrl) return;
+
+        // AUTH CHECK: User must be signed in to download
+        if (!user) {
+            router.push(`/auth?redirect=/prompter`);
+            return;
+        }
+
         const a = document.createElement("a");
         a.style.display = "none";
         a.href = recordedVideoUrl;
@@ -122,7 +126,7 @@ export const PrompterContainer = () => {
             document.body.removeChild(a);
         }, 100);
         setIsReviewModalOpen(false);
-    }, [recordedVideoUrl]);
+    }, [recordedVideoUrl, user, router]);
 
     const handleReRecord = useCallback(() => {
         setIsReviewModalOpen(false);
@@ -226,6 +230,22 @@ export const PrompterContainer = () => {
                 onReRecord={handleReRecord}
                 onDiscard={handleDiscard}
             />
+
+            {/* Floating Plan Profile */}
+            {user && (
+                <div className="fixed top-6 right-6 z-50 flex items-center gap-3 bg-white/5 backdrop-blur-xl border border-white/10 p-2 pr-5 rounded-full hover:bg-white/10 transition-all group select-none">
+                    <div className="w-9 h-9 bg-white rounded-full flex items-center justify-center text-black font-black text-xs">
+                        {user.displayName ? user.displayName.substring(0, 2).toUpperCase() : user.email?.substring(0, 2).toUpperCase()}
+                    </div>
+                    <div className="flex flex-col">
+                        <span className="text-[10px] font-normal tracking-[0.2em] text-zinc-500 lowercase leading-none mb-1">current plan</span>
+                        <span className="text-xs font-normal text-white lowercase leading-none">starter</span>
+                    </div>
+
+                    {/* Subtle indicator */}
+                    <div className="ml-2 w-1.5 h-1.5 bg-cyan-500 rounded-full animate-pulse" />
+                </div>
+            )}
 
             <OnboardingModal />
         </div>

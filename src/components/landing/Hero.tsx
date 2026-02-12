@@ -14,7 +14,7 @@ export const Hero = () => {
 
             <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
                 <h1 className="text-6xl md:text-8xl lg:text-[120px] font-normal tracking-tighter leading-[0.9] text-white mb-8 animate-title">
-                    speak with <span className="text-zinc-500">absolute</span><br />
+                    speak with <span style={{ color: '#0000F7', filter: 'drop-shadow(0 0 10px rgba(0, 0, 247, 0.5))' }}>absolute</span><br />
                     confidence.
                 </h1>
 

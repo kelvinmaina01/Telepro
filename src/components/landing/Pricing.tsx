@@ -92,7 +92,10 @@ export const Pricing = () => {
                                 </div>
                             ))}
                         </div>
-                        <Link href="/prompter" className="w-full h-16 rounded-2xl flex items-center justify-center font-normal text-lg transition-all active:scale-95 bg-black text-white hover:bg-zinc-800 shadow-xl lowercase">
+                        <Link
+                            href={`/checkout?plan=professional&interval=${isYearly ? 'yearly' : 'monthly'}`}
+                            className="w-full h-16 rounded-2xl flex items-center justify-center font-normal text-lg transition-all active:scale-95 bg-black text-white hover:bg-zinc-800 shadow-xl lowercase"
+                        >
                             upgrade to pro
                         </Link>
                     </div>
