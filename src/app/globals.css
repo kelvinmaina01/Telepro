@@ -18,12 +18,19 @@
 
 html,
 body {
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
   background-color: #000;
   color: rgb(var(--foreground-rgb));
   font-family: var(--font-poppins);
+}
+
+/* Force default arrow cursor on all interactive elements as requested */
+a,
+button,
+[role="button"],
+input[type="submit"],
+input[type="button"],
+.cursor-pointer {
+  cursor: default !important;
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
