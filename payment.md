@@ -6,7 +6,8 @@
 - **Camera Devices**: Free access to **Default** and **OBS** cameras. **DroidCam** is a pro-only feature.
 
 ## Pricing
-- **Pro Tier**: **$3.99 / month**
+- **Monthly Subscription**: **$3.99 / month**
+- **Yearly Subscription**: **$3.19 / month** (Billed annually at $38.28 - **Save 20%**)
 
 ## Future Plans
 - [ ] Implement character/word count enforcement in the Editor.
