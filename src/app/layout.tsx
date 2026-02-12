@@ -12,13 +12,13 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const baseUrl = "https://cueflow.harda.dev";
+const baseUrl = "https://telepro.harda.dev";
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: "CueFlow - Free Online Teleprompter",
-    template: "%s | CueFlow",
+    default: "TelePro - Free Online Teleprompter",
+    template: "%s | TelePro",
   },
   description: "Free online teleprompter with camera recording, adjustable scrolling speed, customizable text, and mirror mode. Perfect for video creators, YouTubers, presenters, and content creators. No signup required.",
   keywords: [
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     "browser teleprompter",
     "camera recording",
     "video recording",
-    "cueflow",
+    "telepro",
     "prompter",
     "script reader",
     "video production",
@@ -38,10 +38,7 @@ export const metadata: Metadata = {
     "presentation tool",
     "speech prompter",
   ],
-  authors: [{ name: "harda.dev", url: "https://harda.dev" }],
-  creator: "harda.dev",
-  publisher: "harda.dev",
-  applicationName: "CueFlow",
+  applicationName: "TelePro",
   generator: "Next.js",
   referrer: "origin-when-cross-origin",
   formatDetection: {
@@ -50,24 +47,24 @@ export const metadata: Metadata = {
     telephone: false,
   },
   openGraph: {
-    title: "CueFlow - Free Online Teleprompter",
+    title: "TelePro - Free Online Teleprompter",
     description: "Free online teleprompter with camera recording, adjustable speed, and customizable text. Perfect for video creators and presenters.",
     type: "website",
     locale: "en_US",
     url: baseUrl,
-    siteName: "CueFlow",
+    siteName: "TelePro",
     images: [
       {
         url: "/icon.png",
         width: 512,
         height: 512,
-        alt: "CueFlow Logo",
+        alt: "TelePro Logo",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "CueFlow - Free Online Teleprompter",
+    title: "TelePro - Free Online Teleprompter",
     description: "Free online teleprompter with camera recording and customizable features. No signup required.",
     creator: "@hardaistee",
     images: ["/icon.png"],
@@ -109,7 +106,7 @@ export const viewport: Viewport = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  name: "CueFlow",
+  name: "TelePro",
   description: "Free online teleprompter with camera recording, adjustable scrolling speed, customizable text, and mirror mode.",
   url: baseUrl,
   applicationCategory: "MultimediaApplication",
@@ -119,11 +116,6 @@ const jsonLd = {
     "@type": "Offer",
     price: "0",
     priceCurrency: "USD",
-  },
-  author: {
-    "@type": "Person",
-    name: "harda.dev",
-    url: "https://harda.dev",
   },
   aggregateRating: {
     "@type": "AggregateRating",

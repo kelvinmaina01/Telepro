@@ -1,6 +1,6 @@
 {
-    "name": "CueFlow",
-    "short_name": "CueFlow",
+    "name": "TelePro",
+    "short_name": "TelePro",
     "description": "Free online teleprompter with camera recording",
     "start_url": "/",
     "display": "standalone",

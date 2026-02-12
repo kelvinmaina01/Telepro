@@ -8,7 +8,7 @@ import { CountdownOverlay } from "./CountdownOverlay";
 
 export const PrompterContainer = () => {
     const [text, setText] = useState(
-        `Welcome to CueFlow!
+        `Welcome to TelePro!
 
 Paste your script here and hit Start.
 

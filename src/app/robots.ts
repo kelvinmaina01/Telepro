@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next'
 
 export default function robots(): MetadataRoute.Robots {
-    const baseUrl = 'https://cueflow.harda.dev'
+    const baseUrl = 'https://telepro.harda.dev'
 
     return {
         rules: {

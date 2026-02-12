@@ -171,7 +171,7 @@ export const CameraLayer: React.FC<CameraLayerProps> = ({
           }
 
           const url = URL.createObjectURL(blob);
-          const filename = `cueflow-recording-${Date.now()}.mp4`;
+          const filename = `telepro-recording-${Date.now()}.mp4`;
 
           const a = document.createElement("a");
           a.style.display = "none";
