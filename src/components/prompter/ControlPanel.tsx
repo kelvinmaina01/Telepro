@@ -135,23 +135,18 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
     return (
         <>
             {/* Main Toolbar */}
-            <div className="fixed bottom-12 left-1/2 -translate-x-1/2 z-40 w-[98%] md:w-auto max-w-[1200px]">
+            <div
+                className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-40 transition-all duration-700 ${isVisible ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0 pointer-events-none"}`}
+            >
                 <div
-                    className="flex items-center gap-2 md:gap-5 px-4 md:px-8 pt-10 pb-3 md:pt-12 md:pb-5 rounded-3xl backdrop-blur-3xl border border-white/10 shadow-2xl overflow-x-auto md:overflow-visible no-scrollbar scroll-smooth"
-                    style={{
-                        background: 'linear-gradient(135deg, rgba(0,0,0,0.8) 0%, rgba(20,20,20,0.9) 100%)',
-                        boxShadow: '0 20px 50px -12px rgba(0, 0, 0, 0.7), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1)',
-                    }}
+                    className="flex items-center gap-3 md:gap-4 px-4 pb-8 md:pb-10 overflow-x-auto md:overflow-visible no-scrollbar scroll-smooth"
                 >
 
                     {/* Play/Pause */}
-                    <div className="relative group/tooltip shrink-0">
+                    <div className="flex-shrink-0 group relative p-1 bg-black/40 backdrop-blur-xl border border-white/10 rounded-3xl shadow-xl">
                         <button
                             onClick={onPlayPause}
-                            className={`flex items-center gap-2.5 px-4 h-12 rounded-2xl transition-all duration-300 group ${isPlaying
-                                ? "bg-amber-500/90 hover:bg-amber-400"
-                                : "bg-emerald-500/90 hover:bg-emerald-400"
-                                } shadow-lg hover:shadow-xl hover:scale-[1.05] active:scale-95 border border-white/10`}
+                            className={`flex items-center gap-3 px-8 h-16 rounded-2xl transition-all duration-500 hover:scale-[1.05] active:scale-95 shadow-lg ${isPlaying ? "bg-red-600 shadow-red-900/40" : "bg-emerald-600 shadow-emerald-900/40"}`}
                         >
                             <div className="text-white">
                                 {isPlaying ? (
@@ -166,162 +161,208 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                             </div>
                             <span className="text-white font-bold text-sm tracking-wide">{isPlaying ? "PAUSE" : "PLAY"}</span>
                         </button>
-                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-2 py-1 bg-black/95 text-[10px] text-white rounded-lg whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none border border-white/10 shadow-xl z-50 font-bold uppercase tracking-widest">
-                            {isPlaying ? "Pause scrolling" : "Start scrolling"}
-                        </div>
                     </div>
 
                     {/* Speed & Font Size Group */}
-                    <div className="shrink-0 flex items-center gap-3">
+                    <div className="flex items-center gap-4 bg-black/40 backdrop-blur-xl border border-white/10 rounded-3xl p-1 shadow-xl">
                         {/* Speed */}
-                        <div className="relative group/tooltip flex flex-col gap-1 items-start">
-                            <span className="text-[10px] font-bold text-zinc-500 ml-1 tracking-widest uppercase">Speed</span>
-                            <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors group">
-                                <svg className="w-4 h-4 text-blue-400 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                                    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
-                                    <path d="M12 12l4-4" />
-                                </svg>
-                                <input
-                                    type="text"
-                                    inputMode="numeric"
-                                    value={speedInput}
-                                    onChange={(e) => setSpeedInput(e.target.value.replace(/[^0-9]/g, ''))}
-                                    onBlur={handleSpeedBlur}
-                                    className="w-8 bg-transparent text-white text-center text-base font-black outline-none"
-                                />
+                        <div className="relative group/tooltip flex flex-col gap-1 items-start px-3 py-2">
+                            <span className="text-[9px] font-black text-zinc-500 ml-1 tracking-widest uppercase">Speed</span>
+                            <div className="flex items-center gap-1.5 px-2 py-1.5 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors group/input focus-within:border-blue-500/50">
+                                <button
+                                    onClick={() => setSpeed(Math.max(1, speed - 1))}
+                                    className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-white/10 text-zinc-400 hover:text-white transition-colors"
+                                >
+                                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                                        <path d="M5 12h14" />
+                                    </svg>
+                                </button>
+                                <div className="flex items-center gap-1.5 min-w-[40px] justify-center">
+                                    <svg className="w-3.5 h-3.5 text-blue-500 animate-spin-slow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                                    </svg>
+                                    <span className="text-sm font-black text-white tabular-nums">{speed}</span>
+                                </div>
+                                <button
+                                    onClick={() => setSpeed(speed + 1)}
+                                    className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-white/10 text-zinc-400 hover:text-white transition-colors"
+                                >
+                                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                                        <path d="M12 5v14M5 12h14" />
+                                    </svg>
+                                </button>
                             </div>
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-2 py-1 bg-black/95 text-[10px] text-white rounded-lg whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none border border-white/10 shadow-xl z-50 font-bold uppercase tracking-widest">
+                            <div
+                                className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 px-3 py-1.5 text-sm text-white rounded-xl whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-all duration-300 pointer-events-none border border-blue-400/30 shadow-[0_0_15px_rgba(34,34,247,0.5)] z-50 font-bold uppercase tracking-wider translate-y-2 group-hover/tooltip:translate-y-0"
+                                style={{ backgroundColor: '#2222F7' }}
+                            >
                                 Adjust scroll speed
                             </div>
                         </div>
 
+                        {/* Divider */}
+                        <div className="w-px h-10 bg-white/10" />
+
                         {/* Font Size */}
-                        <div className="relative group/tooltip flex flex-col gap-1 items-start">
-                            <span className="text-[10px] font-bold text-zinc-500 ml-1 tracking-widest uppercase">Size</span>
-                            <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors group">
-                                <svg className="w-4 h-4 text-purple-400 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                                    <path d="M4 7V4h16v3M9 20h6M12 4v16" />
-                                </svg>
-                                <input
-                                    type="text"
-                                    inputMode="numeric"
-                                    value={fontSizeInput}
-                                    onChange={(e) => setFontSizeInput(e.target.value.replace(/[^0-9]/g, ''))}
-                                    onBlur={handleFontSizeBlur}
-                                    className="w-8 bg-transparent text-white text-center text-base font-black outline-none"
-                                />
+                        <div className="relative group/tooltip flex flex-col gap-1 items-start px-3 py-2">
+                            <span className="text-[9px] font-black text-zinc-500 ml-1 tracking-widest uppercase">Size</span>
+                            <div className="flex items-center gap-1.5 px-2 py-1.5 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors group/input focus-within:border-blue-500/50">
+                                <button
+                                    onClick={() => setFontSize(Math.max(10, fontSize - 5))}
+                                    className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-white/10 text-zinc-400 hover:text-white transition-colors"
+                                >
+                                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                                        <path d="M5 12h14" />
+                                    </svg>
+                                </button>
+                                <div className="flex items-center gap-1.5 min-w-[40px] justify-center">
+                                    <svg className="w-3.5 h-3.5 text-purple-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                        <path d="M4 7V4h16v3M9 20h6M12 4v16" />
+                                    </svg>
+                                    <span className="text-sm font-black text-white tabular-nums">{fontSize}</span>
+                                </div>
+                                <button
+                                    onClick={() => setFontSize(fontSize + 5)}
+                                    className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-white/10 text-zinc-400 hover:text-white transition-colors"
+                                >
+                                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                                        <path d="M12 5v14M5 12h14" />
+                                    </svg>
+                                </button>
                             </div>
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-2 py-1 bg-black/95 text-[10px] text-white rounded-lg whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none border border-white/10 shadow-xl z-50 font-bold uppercase tracking-widest">
+                            <div
+                                className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 px-3 py-1.5 text-sm text-white rounded-xl whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-all duration-300 pointer-events-none border border-blue-400/30 shadow-[0_0_15px_rgba(34,34,247,0.5)] z-50 font-bold uppercase tracking-wider translate-y-2 group-hover/tooltip:translate-y-0"
+                                style={{ backgroundColor: '#2222F7' }}
+                            >
                                 Adjust text size
                             </div>
                         </div>
                     </div>
 
-                    {/* Stop */}
-                    <div className="relative group/tooltip shrink-0">
-                        <button
-                            onClick={onStop}
-                            className="flex items-center gap-2 px-4 h-12 rounded-2xl bg-white/5 hover:bg-red-500/20 text-red-500 transition-all duration-300 border border-white/5 hover:border-red-500/50 hover:scale-105 active:scale-95"
-                        >
-                            <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
-                                <path d="M6 6h12v12H6z" />
-                            </svg>
-                            <span className="font-bold text-sm tracking-wide">RESET</span>
-                        </button>
-                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-2 py-1 bg-black/95 text-[10px] text-white rounded-lg whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none border border-white/10 shadow-xl z-50 font-bold uppercase tracking-widest">
-                            Reset to beginning
+                    {/* Reset & Video */}
+                    <div className="flex items-center gap-3 bg-black/40 backdrop-blur-xl border border-white/10 rounded-3xl p-1 shadow-xl">
+                        <div className="group/tooltip relative">
+                            <button
+                                onClick={onStop}
+                                className="flex items-center gap-2.5 px-6 h-14 rounded-2xl bg-zinc-800/50 hover:bg-zinc-800 transition-all duration-300 border border-white/5 active:scale-95 text-zinc-400 hover:text-white group-hover/tooltip:border-red-500/30"
+                            >
+                                <svg className="w-4 h-4 fill-current text-red-500" viewBox="0 0 24 24">
+                                    <rect x="6" y="6" width="12" height="12" rx="1" />
+                                </svg>
+                                <span className="font-black text-xs tracking-widest">RESET</span>
+                            </button>
+                            <div
+                                className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 px-3 py-1.5 text-sm text-white rounded-xl whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-all duration-300 pointer-events-none border border-blue-400/30 shadow-[0_0_15px_rgba(34,34,247,0.5)] z-50 font-bold uppercase tracking-wider translate-y-2 group-hover/tooltip:translate-y-0"
+                                style={{ backgroundColor: '#2222F7' }}
+                            >
+                                Reset to beginning
+                            </div>
+                        </div>
+
+                        <div className="group/tooltip relative">
+                            <button
+                                onClick={() => setIsRecordingEnabled(!isRecordingEnabled)}
+                                className={`flex items-center gap-2.5 px-6 h-14 rounded-2xl transition-all duration-300 border active:scale-95 ${isRecordingEnabled ? 'bg-emerald-600/10 border-emerald-500/30 text-emerald-500' : 'bg-zinc-800/50 border-white/5 text-zinc-500'}`}
+                            >
+                                <div className={`w-2.5 h-2.5 rounded-full ${isRecordingEnabled ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'bg-current'}`} />
+                                <span className="font-black text-xs tracking-widest">{isRecordingEnabled ? "CAMERA ON" : "CAMERA OFF"}</span>
+                            </button>
+                            <div
+                                className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 px-3 py-1.5 text-sm text-white rounded-xl whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-all duration-300 pointer-events-none border border-blue-400/30 shadow-[0_0_15px_rgba(34,34,247,0.5)] z-50 font-bold uppercase tracking-wider translate-y-2 group-hover/tooltip:translate-y-0"
+                                style={{ backgroundColor: '#2222F7' }}
+                            >
+                                {isRecordingEnabled ? "Disable camera" : "Enable camera"}
+                            </div>
                         </div>
                     </div>
 
-                    <div className="shrink-0 w-px h-10 bg-white/10" />
-
-                    {/* Record */}
-                    <div className="relative group/tooltip shrink-0">
-                        <button
-                            onClick={() => setIsRecordingEnabled(!isRecordingEnabled)}
-                            className={`flex items-center gap-2.5 px-4 h-12 rounded-2xl transition-all duration-300 group ${isRecordingEnabled
-                                ? "bg-red-500/90 text-white shadow-lg shadow-red-500/30"
-                                : "bg-white/5 text-zinc-400 border border-white/10 hover:bg-white/10"
-                                } hover:scale-105 active:scale-95`}
-                        >
-                            <div className={`w-3 h-3 rounded-full ${isRecordingEnabled ? 'bg-white animate-pulse' : 'bg-current'}`} />
-                            <span className="font-bold text-sm tracking-wide">{isRecordingEnabled ? "VIDEO ON" : "VIDEO OFF"}</span>
-                        </button>
-                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-2 py-1 bg-black/95 text-[10px] text-white rounded-lg whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none border border-white/10 shadow-xl z-50 font-bold uppercase tracking-widest">
-                            {isRecordingEnabled ? "Disable camera" : "Enable camera"}
+                    {/* Stop Recording (Only visible if started) */}
+                    {hasStarted && (
+                        <div className="flex-shrink-0 group/tooltip relative p-1 bg-red-600/10 backdrop-blur-xl border border-red-500/20 rounded-3xl shadow-[0_0_30px_rgba(220,38,38,0.2)] animate-in zoom-in-95 duration-300">
+                            <button
+                                onClick={onStop}
+                                className="flex items-center gap-3 px-8 h-16 rounded-2xl bg-red-600 hover:bg-red-500 text-white transition-all duration-300 shadow-lg shadow-red-900/40 hover:scale-[1.05] active:scale-95 group/btn"
+                            >
+                                <div className="w-4 h-4 bg-white rounded-sm group-hover/btn:scale-110 transition-transform" />
+                                <span className="font-black text-sm tracking-widest">STOP RECORDING</span>
+                            </button>
+                            <div
+                                className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 px-3 py-1.5 text-sm text-white rounded-xl whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-all duration-300 pointer-events-none border border-blue-400/30 shadow-[0_0_15px_rgba(34,34,247,0.5)] z-50 font-bold uppercase tracking-wider translate-y-2 group-hover/tooltip:translate-y-0"
+                                style={{ backgroundColor: '#2222F7' }}
+                            >
+                                Stop and review recording
+                            </div>
                         </div>
-                    </div>
+                    )}
 
-                    {/* Layout Controls Group */}
-                    <div className="shrink-0 flex items-center gap-2">
-                        {/* Mirror */}
-                        <div className="relative group/tooltip">
+                    {/* Layout Controls */}
+                    <div className="flex items-center gap-2 bg-black/40 backdrop-blur-xl border border-white/10 rounded-3xl p-1 shadow-xl">
+                        <div className="group/tooltip relative">
                             <button
                                 onClick={() => setIsMirrored(!isMirrored)}
-                                className={`flex flex-col items-center justify-center w-14 h-14 rounded-2xl transition-all duration-300 ${isMirrored
-                                    ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/50"
-                                    : "bg-white/5 text-zinc-500 border border-white/10 hover:text-white"
-                                    } hover:scale-110`}
+                                className={`flex flex-col items-center justify-center w-14 h-14 rounded-2xl transition-all duration-300 border ${isMirrored ? 'bg-blue-600/20 border-blue-500/40 text-blue-400' : 'bg-white/5 border-white/5 text-zinc-500 hover:text-white'}`}
                             >
-                                <svg className="w-4 h-4 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                                    <path d="M12 3v18M8 7H5l3 5-3 5h3M16 7h3l-3 5 3 5h-3" />
+                                <svg className="w-4 h-4 mb-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                    <path d="M12 21V3M3 9l3-3 3 3M3 6h6M21 9l-3-3-3 3M21 6h-6" />
                                 </svg>
-                                <span className="text-[9px] font-black uppercase tracking-tighter">Mirror</span>
+                                <span className="text-[8px] font-black uppercase tracking-tighter">Mirror</span>
                             </button>
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-2 py-1 bg-black/95 text-[10px] text-white rounded-lg whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none border border-white/10 shadow-xl z-50 font-bold uppercase tracking-widest">
+                            <div
+                                className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 px-3 py-1.5 text-sm text-white rounded-xl whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-all duration-300 pointer-events-none border border-blue-400/30 shadow-[0_0_15px_rgba(34,34,247,0.5)] z-50 font-bold uppercase tracking-wider translate-y-2 group-hover/tooltip:translate-y-0"
+                                style={{ backgroundColor: '#2222F7' }}
+                            >
                                 Flip text horizontally
                             </div>
                         </div>
 
-                        {/* Reverse */}
-                        <div className="relative group/tooltip">
+                        <div className="group/tooltip relative">
                             <button
                                 onClick={() => setIsReversed(!isReversed)}
-                                className={`flex flex-col items-center justify-center w-14 h-14 rounded-2xl transition-all duration-300 ${isReversed
-                                    ? "bg-violet-500/20 text-violet-400 border border-violet-500/50"
-                                    : "bg-white/5 text-zinc-500 border border-white/10 hover:text-white"
-                                    } hover:scale-110`}
+                                className={`flex flex-col items-center justify-center w-14 h-14 rounded-2xl transition-all duration-300 border ${isReversed ? 'bg-purple-600/20 border-purple-500/40 text-purple-400' : 'bg-white/5 border-white/5 text-zinc-500 hover:text-white'}`}
                             >
-                                <svg className="w-4 h-4 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                                    <path d="M7 21l-4-4 4-4M21 13v2a4 4 0 01-4 4H3M17 3l4 4-4 4M3 11V9a4 4 0 014-4h14" />
+                                <svg className="w-4 h-4 mb-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                    <path d="M7 13l5-5 5 5M7 17l5-5 5 5" />
                                 </svg>
-                                <span className="text-[9px] font-black uppercase tracking-tighter">Reverse</span>
+                                <span className="text-[8px] font-black uppercase tracking-tighter">Reverse</span>
                             </button>
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-2 py-1 bg-black/95 text-[10px] text-white rounded-lg whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none border border-white/10 shadow-xl z-50 font-bold uppercase tracking-widest">
+                            <div
+                                className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 px-3 py-1.5 text-sm text-white rounded-xl whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-all duration-300 pointer-events-none border border-blue-400/30 shadow-[0_0_15px_rgba(34,34,247,0.5)] z-50 font-bold uppercase tracking-wider translate-y-2 group-hover/tooltip:translate-y-0"
+                                style={{ backgroundColor: '#2222F7' }}
+                            >
                                 Change scroll direction
                             </div>
                         </div>
                     </div>
 
-                    <div className="shrink-0 w-px h-10 bg-white/10" />
-
-                    {/* Stats Group */}
-                    <div className="shrink-0 flex items-center gap-3">
-                        <div className="relative group/tooltip flex flex-col gap-1">
-                            <span className="text-[10px] font-bold text-zinc-500 tracking-widest uppercase">Recording</span>
-                            <div className={`flex items-center gap-2 px-3 py-2 rounded-xl font-mono text-sm font-black border transition-colors ${isRecordingEnabled && hasStarted
-                                ? "bg-red-500/10 text-red-500 border-red-500/30"
-                                : "bg-white/5 text-white border-white/10"
-                                }`}>
-                                <span className={isRecordingEnabled && hasStarted && isPlaying ? "animate-pulse" : ""}>
+                    {/* Recording Stats */}
+                    <div className="flex items-center gap-3 bg-black/40 backdrop-blur-xl border border-white/10 rounded-3xl p-1 shadow-xl">
+                        <div className="group/tooltip relative">
+                            <div className="flex items-center gap-2 px-5 h-14 bg-white/5 rounded-2xl border border-white/5 transition-colors group-hover/tooltip:bg-white/10">
+                                <div className={`w-2 h-2 rounded-full ${hasStarted ? 'bg-red-500 animate-pulse' : 'bg-zinc-600'}`} />
+                                <span className="text-sm font-black text-white tabular-nums tracking-tracking-tight">
                                     {formatTime(recordingTime)}
                                 </span>
                             </div>
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-2 py-1 bg-black/95 text-[10px] text-white rounded-lg whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none border border-white/10 shadow-xl z-50 font-bold uppercase tracking-widest">
+                            <div
+                                className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 px-3 py-1.5 text-sm text-white rounded-xl whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-all duration-300 pointer-events-none border border-blue-400/30 shadow-[0_0_15px_rgba(34,34,247,0.5)] z-50 font-bold uppercase tracking-wider translate-y-2 group-hover/tooltip:translate-y-0"
+                                style={{ backgroundColor: '#2222F7' }}
+                            >
                                 Video duration
                             </div>
                         </div>
 
-                        <div className="relative group/tooltip flex flex-col gap-1">
-                            <span className="text-[10px] font-bold text-zinc-500 tracking-widest uppercase">Est. Read</span>
-                            <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-sm font-black">
-                                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <div className="group/tooltip relative">
+                            <div className="flex items-center gap-2 px-5 h-14 bg-white/10 rounded-2xl border border-emerald-500/20 shadow-[inset_0_0_10px_rgba(16,185,129,0.05)]">
+                                <svg className="w-4 h-4 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                                     <circle cx="12" cy="12" r="10" />
                                     <path d="M12 6v6l4 2" />
                                 </svg>
-                                <span>{estimatedReadingTime}</span>
+                                <span className="text-xs font-black text-emerald-500 uppercase tracking-tighter">{estimatedReadingTime}</span>
                             </div>
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-2 py-1 bg-black/95 text-[10px] text-white rounded-lg whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none border border-white/10 shadow-xl z-50 font-bold uppercase tracking-widest">
+                            <div
+                                className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 px-3 py-1.5 text-sm text-white rounded-xl whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-all duration-300 pointer-events-none border border-blue-400/30 shadow-[0_0_15px_rgba(34,34,247,0.5)] z-50 font-bold uppercase tracking-wider translate-y-2 group-hover/tooltip:translate-y-0"
+                                style={{ backgroundColor: '#2222F7' }}
+                            >
                                 Estimated time to read
                             </div>
                         </div>
@@ -329,56 +370,61 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
 
                     <div className="shrink-0 w-px h-10 bg-white/10" />
 
-                    {/* Tools Group */}
-                    <div className="shrink-0 flex items-center gap-2">
-                        {/* Edit */}
-                        <div className="relative group/tooltip">
+                    {/* Tools & Settings */}
+                    <div className="flex items-center gap-3 bg-black/40 backdrop-blur-xl border border-white/10 rounded-3xl p-1 shadow-xl">
+                        <div className="group/tooltip relative">
                             <button
                                 onClick={() => setIsEditorOpen(true)}
-                                className="flex flex-col items-center justify-center w-14 h-14 rounded-2xl bg-white/5 text-zinc-500 border border-white/10 hover:text-white hover:bg-white/10 transition-all duration-300 hover:scale-110"
+                                className="flex flex-col items-center justify-center w-14 h-14 rounded-2xl bg-white/5 border border-white/5 text-zinc-500 hover:text-white transition-all duration-300 hover:bg-white/10 active:scale-95 group-hover/tooltip:border-blue-500/30"
                             >
-                                <svg className="w-4 h-4 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                                    <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+                                <svg className="w-4 h-4 mb-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                    <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+                                    <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
                                 </svg>
-                                <span className="text-[9px] font-black uppercase">Edit</span>
+                                <span className="text-[8px] font-black uppercase">Edit</span>
                             </button>
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-2 py-1 bg-black/95 text-[10px] text-white rounded-lg whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none border border-white/10 shadow-xl z-50 font-bold uppercase tracking-widest">
+                            <div
+                                className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 px-3 py-1.5 text-sm text-white rounded-xl whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-all duration-300 pointer-events-none border border-blue-400/30 shadow-[0_0_15px_rgba(34,34,247,0.5)] z-50 font-bold uppercase tracking-wider translate-y-2 group-hover/tooltip:translate-y-0"
+                                style={{ backgroundColor: '#2222F7' }}
+                            >
                                 Edit script text
                             </div>
                         </div>
 
-                        {/* Countdown */}
-                        <div className="relative group/tooltip flex flex-col items-center justify-center w-14 h-14 rounded-2xl bg-white/5 text-zinc-500 border border-white/10 hover:bg-white/10 transition-colors group">
-                            <input
-                                type="text"
-                                inputMode="numeric"
-                                value={countdownInput}
-                                onChange={(e) => setCountdownInput(e.target.value.replace(/[^0-9]/g, ''))}
-                                onBlur={handleCountdownBlur}
-                                className="w-6 bg-transparent text-white text-center text-sm font-black outline-none z-10"
-                            />
-                            <span className="text-[9px] font-black uppercase tracking-tighter">Secs</span>
-                            <div className="absolute top-1 right-1">
-                                <div className="w-1.5 h-1.5 rounded-full bg-amber-500/50" />
-                            </div>
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-2 py-1 bg-black/95 text-[10px] text-white rounded-lg whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none border border-white/10 shadow-xl z-50 font-bold uppercase tracking-widest">
+                        <div className="relative group/tooltip">
+                            <button
+                                onClick={() => setCountdownSeconds(countdownSeconds === 3 ? 5 : countdownSeconds === 5 ? 10 : countdownSeconds === 10 ? 0 : 3)}
+                                className="flex flex-col items-center justify-center w-14 h-14 rounded-2xl bg-white/5 border border-white/5 text-zinc-500 hover:text-white transition-all duration-300 active:scale-95 group-hover/tooltip:border-amber-500/30"
+                            >
+                                <span className="text-sm font-black text-amber-500">{countdownSeconds}</span>
+                                <span className="text-[8px] font-black uppercase">Secs</span>
+                                <div className="absolute top-1 right-1">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-amber-500/50" />
+                                </div>
+                            </button>
+                            <div
+                                className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 px-3 py-1.5 text-sm text-white rounded-xl whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-all duration-300 pointer-events-none border border-blue-400/30 shadow-[0_0_15px_rgba(34,34,247,0.5)] z-50 font-bold uppercase tracking-wider translate-y-2 group-hover/tooltip:translate-y-0"
+                                style={{ backgroundColor: '#2222F7' }}
+                            >
                                 Countdown delay
                             </div>
                         </div>
 
-                        {/* Settings */}
-                        <div className="relative group/tooltip">
+                        <div className="group/tooltip relative">
                             <button
                                 onClick={() => setIsDeviceSettingsOpen(true)}
-                                className="flex flex-col items-center justify-center w-14 h-14 rounded-2xl bg-white/5 text-zinc-500 border border-white/10 hover:text-white hover:bg-white/10 transition-all duration-300 hover:scale-110"
+                                className="flex flex-col items-center justify-center w-14 h-14 bg-white/5 rounded-2xl border border-white/5 text-zinc-500 hover:text-white transition-all duration-300 hover:bg-white/10 active:scale-95 group-hover/tooltip:border-zinc-400/30 shrink-0"
                             >
-                                <svg className="w-4 h-4 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                                    <path d="M12 15a3 3 0 100-6 3 3 0 000 6z" />
+                                <svg className="w-4 h-4 mb-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                    <circle cx="12" cy="12" r="3" />
                                     <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" />
                                 </svg>
-                                <span className="text-[9px] font-black uppercase">Setup</span>
+                                <span className="text-[8px] font-black uppercase">Setup</span>
                             </button>
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-2 py-1 bg-black/95 text-[10px] text-white rounded-lg whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none border border-white/10 shadow-xl z-50 font-bold uppercase tracking-widest">
+                            <div
+                                className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 px-3 py-1.5 text-sm text-white rounded-xl whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-all duration-300 pointer-events-none border border-blue-400/30 shadow-[0_0_15px_rgba(34,34,247,0.5)] z-50 font-bold uppercase tracking-wider translate-y-2 group-hover/tooltip:translate-y-0"
+                                style={{ backgroundColor: '#2222F7' }}
+                            >
                                 Camera & Mic settings
                             </div>
                         </div>

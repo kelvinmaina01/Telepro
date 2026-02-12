@@ -6,6 +6,7 @@ interface CameraLayerProps {
   isRecording: boolean;
   shouldStopRecording: boolean;
   onRecordingStopped: () => void;
+  onRecordingComplete?: (blob: Blob, url: string) => void;
   onRecordingTimeUpdate: (seconds: number) => void;
   onCameraError?: () => void;
   videoDeviceId?: string;
@@ -17,6 +18,7 @@ export const CameraLayer: React.FC<CameraLayerProps> = ({
   isRecording,
   shouldStopRecording,
   onRecordingStopped,
+  onRecordingComplete,
   onRecordingTimeUpdate,
   onCameraError,
   videoDeviceId,
@@ -171,26 +173,18 @@ export const CameraLayer: React.FC<CameraLayerProps> = ({
           }
 
           const url = URL.createObjectURL(blob);
-          const filename = `telepro-recording-${Date.now()}.mp4`;
 
-          const a = document.createElement("a");
-          a.style.display = "none";
-          a.href = url;
-          a.download = filename;
-          document.body.appendChild(a);
-          a.click();
-
-          // Cleanup after a short delay
-          setTimeout(() => {
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-          }, 100);
+          // If onRecordingComplete is provided, parent handles the video (e.g. for review)
+          // Otherwise, we still call onRecordingStopped but don't download
+          if (onRecordingComplete) {
+            onRecordingComplete(blob, url);
+          } else {
+            // Fallback for default behavior if no complete handler
+            onRecordingStoppedRef.current();
+          }
 
           chunksRef.current = [];
           isRecordingRef.current = false;
-
-          // Notify parent that recording has stopped
-          onRecordingStoppedRef.current();
         };
 
         // Start recording with timeslice for regular data chunks

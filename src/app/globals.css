@@ -7,8 +7,7 @@
   --background-start-rgb: 0, 0, 0;
   --background-end-rgb: 0, 0, 0;
 
-  --font-geist-sans: "Geist", sans-serif;
-  --font-geist-mono: "Geist Mono", monospace;
+  --font-poppins: "Poppins", sans-serif;
 }
 
 * {
@@ -24,7 +23,7 @@ body {
   overflow: hidden;
   background-color: #000;
   color: rgb(var(--foreground-rgb));
-  font-family: var(--font-geist-sans);
+  font-family: var(--font-poppins);
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */

@@ -26,12 +26,22 @@ const SaveIcon = () => (
 const colorPresets = [
     { name: "White", value: "#ffffff" },
     { name: "Yellow", value: "#fbbf24" },
-    { name: "Green", value: "#34d399" },
-    { name: "Cyan", value: "#22d3ee" },
-    { name: "Blue", value: "#60a5fa" },
-    { name: "Pink", value: "#f472b6" },
-    { name: "Red", value: "#f87171" },
+    { name: "Amber", value: "#f59e0b" },
     { name: "Orange", value: "#fb923c" },
+    { name: "Red", value: "#f87171" },
+    { name: "Rose", value: "#f43f5e" },
+    { name: "Pink", value: "#f472b6" },
+    { name: "Fuchsia", value: "#d946ef" },
+    { name: "Purple", value: "#a855f7" },
+    { name: "Violet", value: "#8b5cf6" },
+    { name: "Indigo", value: "#6366f1" },
+    { name: "Blue", value: "#60a5fa" },
+    { name: "Cyan", value: "#22d3ee" },
+    { name: "Teal", value: "#14b8a6" },
+    { name: "Emerald", value: "#10b981" },
+    { name: "Green", value: "#34d399" },
+    { name: "Lime", value: "#84cc16" },
+    { name: "Slate", value: "#64748b" },
 ];
 
 export const TextEditorModal: React.FC<TextEditorModalProps> = ({

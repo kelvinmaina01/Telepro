@@ -1,10 +1,10 @@
-# CueFlow
+# TelePro
 
 **Free Online Teleprompter with Camera Recording**
 
 A professional web-based teleprompter application with real-time camera recording, adjustable scrolling speed, customizable text, and mirror mode. Built with Next.js 16, React 19, and TypeScript.
 
-🌐 **Live Demo**: [cueflow.harda.dev](https://cueflow.harda.dev)
+🌐 **Live Demo**: [telepro.harda.dev](https://telepro.harda.dev)
 
 ---
 

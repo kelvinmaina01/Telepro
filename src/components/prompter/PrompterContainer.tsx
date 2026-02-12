@@ -5,6 +5,7 @@ import { CameraLayer } from "./CameraLayer";
 import { TextLayer } from "./TextLayer";
 import { ControlPanel } from "./ControlPanel";
 import { CountdownOverlay } from "./CountdownOverlay";
+import { VideoReviewModal } from "./VideoReviewModal";
 
 export const PrompterContainer = () => {
     const [text, setText] = useState(
@@ -34,6 +35,11 @@ Good luck with your recording!`
     const [hasStarted, setHasStarted] = useState(false);
     // New: Signal to stop recording (triggers download)
     const [shouldStopRecording, setShouldStopRecording] = useState(false);
+
+    // New: Video review state
+    const [recordedVideoUrl, setRecordedVideoUrl] = useState<string | null>(null);
+    const [recordedVideoBlob, setRecordedVideoBlob] = useState<Blob | null>(null);
+    const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
 
     // Recording is active from first play until stop is pressed
     const isRecording = hasStarted && isRecordingEnabled && !shouldStopRecording;
@@ -81,12 +87,55 @@ Good luck with your recording!`
         }
     }, [hasStarted, isRecordingEnabled]);
 
-    // Called by CameraLayer after recording is stopped and file is downloaded
+    // Called by CameraLayer after recording is stopped
     const handleRecordingStopped = useCallback(() => {
         setShouldStopRecording(false);
         setHasStarted(false);
         setRecordingTime(0);
     }, []);
+
+    const handleRecordingComplete = useCallback((blob: Blob, url: string) => {
+        setRecordedVideoBlob(blob);
+        setRecordedVideoUrl(url);
+        setIsReviewModalOpen(true);
+        handleRecordingStopped();
+    }, [handleRecordingStopped]);
+
+    const handleDownload = useCallback(() => {
+        if (!recordedVideoUrl) return;
+        const a = document.createElement("a");
+        a.style.display = "none";
+        a.href = recordedVideoUrl;
+        a.download = `telepro-recording-${Date.now()}.mp4`;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+            document.body.removeChild(a);
+        }, 100);
+        setIsReviewModalOpen(false);
+    }, [recordedVideoUrl]);
+
+    const handleReRecord = useCallback(() => {
+        setIsReviewModalOpen(false);
+        // Clean up current URL
+        if (recordedVideoUrl) URL.revokeObjectURL(recordedVideoUrl);
+        setRecordedVideoUrl(null);
+        setRecordedVideoBlob(null);
+        // Immediately trigger countdown for new take
+        if (countdownSeconds > 0) {
+            setIsCountingDown(true);
+        } else {
+            setHasStarted(true);
+            setIsPlaying(true);
+        }
+    }, [recordedVideoUrl, countdownSeconds]);
+
+    const handleDiscard = useCallback(() => {
+        if (recordedVideoUrl) URL.revokeObjectURL(recordedVideoUrl);
+        setRecordedVideoUrl(null);
+        setRecordedVideoBlob(null);
+        setIsReviewModalOpen(false);
+    }, [recordedVideoUrl]);
 
     const handleRecordingTimeUpdate = useCallback((seconds: number) => {
         setRecordingTime(seconds);
@@ -108,6 +157,7 @@ Good luck with your recording!`
                 isRecording={isRecording}
                 shouldStopRecording={shouldStopRecording}
                 onRecordingStopped={handleRecordingStopped}
+                onRecordingComplete={handleRecordingComplete}
                 onRecordingTimeUpdate={handleRecordingTimeUpdate}
                 onCameraError={handleCameraError}
                 videoDeviceId={selectedVideoDevice}
@@ -158,6 +208,14 @@ Good luck with your recording!`
                 seconds={countdownSeconds}
                 onComplete={handleCountdownComplete}
                 isActive={isCountingDown}
+            />
+
+            <VideoReviewModal
+                isOpen={isReviewModalOpen}
+                videoUrl={recordedVideoUrl}
+                onDownload={handleDownload}
+                onReRecord={handleReRecord}
+                onDiscard={handleDiscard}
             />
         </div>
     );
