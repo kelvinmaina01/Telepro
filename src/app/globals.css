@@ -16,21 +16,28 @@
   padding: 0;
 }
 
-html,
+html {
+  height: auto !important;
+  overflow-y: auto !important;
+}
+
 body {
+  min-height: 100vh;
   background-color: #000;
   color: rgb(var(--foreground-rgb));
   font-family: var(--font-poppins);
+  overflow-y: auto !important;
+  position: relative;
 }
 
-/* Force default arrow cursor on all interactive elements as requested */
+/* Reverting to standard pointer cursor for buttons and links as clarified */
 a,
 button,
 [role="button"],
 input[type="submit"],
 input[type="button"],
 .cursor-pointer {
-  cursor: default !important;
+  cursor: pointer !important;
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
