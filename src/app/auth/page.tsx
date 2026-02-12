@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -11,7 +11,7 @@ import {
 } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 
-export default function AuthPage() {
+const AuthContent = () => {
     const { loginWithGoogle, user } = useAuth();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -137,5 +137,17 @@ export default function AuthPage() {
                 </div>
             </div>
         </div>
+    );
+};
+
+export default function AuthPage() {
+    return (
+        <Suspense fallback={
+            <div className="bg-black min-h-screen text-white flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full border-2 border-white/20 border-t-white animate-spin" />
+            </div>
+        }>
+            <AuthContent />
+        </Suspense>
     );
 }
