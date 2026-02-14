@@ -1,6 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useAuth } from "@/context/AuthContext";
+
+// Pricing limits from payment.md
+const FREE_WORD_LIMIT = 1500;
+const WORD_WARNING_THRESHOLD = 1300;
 
 interface TextEditorModalProps {
     isOpen: boolean;
@@ -52,21 +57,50 @@ export const TextEditorModal: React.FC<TextEditorModalProps> = ({
     textColor,
     setTextColor,
 }) => {
+    const { userProfile } = useAuth();
     const [editText, setEditText] = useState(text);
+    const [showLimitWarning, setShowLimitWarning] = useState(false);
+
+    const isPro = userProfile?.plan === "pro";
+    const wordLimit = isPro ? Infinity : FREE_WORD_LIMIT;
 
     useEffect(() => {
         setEditText(text);
     }, [text, isOpen]);
 
+    // Calculate word count
+    const wordCount = editText.trim() ? editText.trim().split(/\s+/).length : 0;
+
+    // Check if over limit
+    const isOverLimit = wordCount > wordLimit;
+    const isNearLimit = wordCount >= WORD_WARNING_THRESHOLD && !isPro;
+
+    // Handle text change with limit enforcement
+    const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const newText = e.target.value;
+        const newWordCount = newText.trim() ? newText.trim().split(/\s+/).length : 0;
+
+        // For free users, prevent typing beyond limit
+        if (!isPro && newWordCount > wordLimit) {
+            setShowLimitWarning(true);
+            return;
+        }
+
+        setEditText(newText);
+        setShowLimitWarning(false);
+    };
+
     if (!isOpen) return null;
 
     const handleSave = () => {
+        if (isOverLimit) {
+            return; // Prevent save if over limit
+        }
         onSave(editText);
         onClose();
     };
 
-    // Calculate word and line count
-    const wordCount = editText.trim() ? editText.trim().split(/\s+/).length : 0;
+    // Calculate line count
     const lineCount = editText.split('\n').length;
 
     return (
@@ -137,9 +171,9 @@ export const TextEditorModal: React.FC<TextEditorModalProps> = ({
                 <div className="flex-1 p-4 md:p-6 overflow-hidden flex flex-col">
                     <textarea
                         value={editText}
-                        onChange={(e) => setEditText(e.target.value)}
+                        onChange={handleTextChange}
                         placeholder="Paste or type your script here..."
-                        className="flex-1 w-full bg-zinc-900/80 text-white rounded-xl p-4 resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500/50 border border-white/10 text-lg leading-relaxed"
+                        className={`flex-1 w-full bg-zinc-900/80 text-white rounded-xl p-4 resize-none focus:outline-none focus:ring-2 border text-lg leading-relaxed ${isOverLimit ? 'border-red-500/50 focus:ring-red-500/50' : 'border-white/10 focus:ring-emerald-500/50'}`}
                         style={{
                             minHeight: '300px',
                         }}
@@ -149,38 +183,72 @@ export const TextEditorModal: React.FC<TextEditorModalProps> = ({
                     <div className="mt-4 flex items-center justify-between text-sm shrink-0">
                         <div className="flex items-center gap-4">
                             <span className="text-zinc-500 hidden md:inline">
-
                                 Tip: Each line appears as a separate paragraph on screen
                             </span>
+                            {/* Upgrade prompt for free users */}
+                            {!isPro && isNearLimit && (
+                                <a 
+                                    href="/checkout?plan=professional&interval=monthly"
+                                    className="px-3 py-1.5 rounded-lg bg-amber-500/10 text-amber-500 text-xs font-medium hover:bg-amber-500/20 transition-colors"
+                                >
+                                    ⚡ Upgrade to Pro for unlimited words
+                                </a>
+                            )}
+                            {showLimitWarning && (
+                                <span className="text-red-500 text-xs">
+                                    ⚠️ Word limit reached
+                                </span>
+                            )}
                         </div>
                         <div className="flex items-center gap-4 text-zinc-600 font-mono text-xs">
-                            <span>{wordCount} words</span>
+                            <span className={isOverLimit ? "text-red-500 font-bold" : isNearLimit ? "text-amber-500" : ""}>
+                                {wordCount} {isPro ? "words" : `/ ${wordLimit} words`}
+                            </span>
                             <span>{lineCount} lines</span>
                             <span>{editText.length} characters</span>
+                            {isOverLimit && (
+                                <span className="text-red-500 font-bold">
+                                    ⚠️ Over limit!
+                                </span>
+                            )}
                         </div>
                     </div>
                 </div>
 
                 {/* Footer */}
                 <div
-                    className="flex items-center justify-end gap-3 px-4 md:px-6 py-3 md:py-4 border-t border-white/10 shrink-0"
+                    className="flex items-center justify-between gap-3 px-4 md:px-6 py-3 md:py-4 border-t border-white/10 shrink-0"
                     style={{
                         background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)',
                     }}
                 >
-                    <button
-                        onClick={onClose}
-                        className="px-5 py-2.5 rounded-xl text-zinc-400 hover:text-white hover:bg-white/10 transition-all duration-200 font-medium border border-white/10"
-                    >
-                        Cancel
-                    </button>
-                    <button
-                        onClick={handleSave}
-                        className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-br from-emerald-500/80 to-green-600/80 hover:from-emerald-400/90 hover:to-green-500/90 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg backdrop-blur-md border border-white/10"
-                    >
-                        <SaveIcon />
-                        <span>Save</span>
-                    </button>
+                    <div>
+                        {isOverLimit && (
+                            <span className="text-red-500 text-sm">
+                                Please reduce words to save
+                            </span>
+                        )}
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <button
+                            onClick={onClose}
+                            className="px-5 py-2.5 rounded-xl text-zinc-400 hover:text-white hover:bg-white/10 transition-all duration-200 font-medium border border-white/10"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            onClick={handleSave}
+                            disabled={isOverLimit}
+                            className={`flex items-center gap-2 px-6 py-2.5 font-semibold rounded-xl transition-all duration-200 shadow-lg backdrop-blur-md border border-white/10 ${
+                                isOverLimit 
+                                    ? 'bg-zinc-700 text-zinc-500 cursor-not-allowed' 
+                                    : 'bg-gradient-to-br from-emerald-500/80 to-green-600/80 hover:from-emerald-400/90 hover:to-green-500/90 text-white'
+                            }`}
+                        >
+                            <SaveIcon />
+                            <span>Save</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

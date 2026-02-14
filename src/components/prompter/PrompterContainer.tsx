@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { CameraLayer } from "./CameraLayer";
@@ -9,6 +9,10 @@ import { ControlPanel } from "./ControlPanel";
 import { CountdownOverlay } from "./CountdownOverlay";
 import { VideoReviewModal } from "./VideoReviewModal";
 import { OnboardingModal } from "./OnboardingModal";
+
+// Pricing limits from payment.md
+const FREE_RECORDING_LIMIT_SECONDS = 30 * 60; // 30 minutes in seconds
+const RECORDING_WARNING_THRESHOLD = 25 * 60; // 25 minutes
 
 const DEFAULT_SCRIPT = `Welcome to TelePro!
 
@@ -19,9 +23,15 @@ You can adjust speed, font size, and text color.
 Good luck with your recording!`;
 
 export const PrompterContainer = () => {
-    const { user, loading } = useAuth();
+    const { user, loading, userProfile } = useAuth();
     const router = useRouter();
+
+    // Check if user is Pro
+    const isPro = userProfile?.plan === "pro";
+    const recordingLimit = isPro ? Infinity : FREE_RECORDING_LIMIT_SECONDS;
+
     const [text, setText] = useState(DEFAULT_SCRIPT);
+    const [showRecordingWarning, setShowRecordingWarning] = useState(false);
 
     const [speed, setSpeed] = useState(20);
     const [fontSize, setFontSize] = useState(60);
@@ -49,6 +59,22 @@ export const PrompterContainer = () => {
 
     // Recording is active from first play until stop is pressed
     const isRecording = hasStarted && isRecordingEnabled && !shouldStopRecording;
+
+    // Check recording time limits
+    useEffect(() => {
+        // Show warning when approaching limit
+        if (!isPro && recordingTime >= RECORDING_WARNING_THRESHOLD && recordingTime < recordingLimit) {
+            setShowRecordingWarning(true);
+        }
+        
+        // Auto-stop when limit reached
+        if (!isPro && recordingTime >= recordingLimit) {
+            handleStop();
+            setShowRecordingWarning(false);
+            // Show alert that recording was auto-stopped
+            alert("Recording limit reached! Upgrade to Pro for unlimited recording time.");
+        }
+    }, [recordingTime, isPro, recordingLimit]);
 
     const handlePlayPause = useCallback(() => {
         if (isPlaying) {
@@ -239,11 +265,26 @@ export const PrompterContainer = () => {
                     </div>
                     <div className="flex flex-col">
                         <span className="text-[10px] font-normal tracking-[0.2em] text-zinc-500 lowercase leading-none mb-1">current plan</span>
-                        <span className="text-xs font-normal text-white lowercase leading-none">starter</span>
+                        <span className="text-xs font-normal text-white lowercase leading-none">{isPro ? "pro" : "starter"}</span>
                     </div>
 
                     {/* Subtle indicator */}
-                    <div className="ml-2 w-1.5 h-1.5 bg-cyan-500 rounded-full animate-pulse" />
+                    <div className={`ml-2 w-1.5 h-1.5 rounded-full animate-pulse ${isPro ? 'bg-emerald-500' : 'bg-cyan-500'}`} />
+                </div>
+            )}
+
+            {/* Recording Warning */}
+            {showRecordingWarning && !isPro && (
+                <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 px-6 py-3 bg-amber-500/90 backdrop-blur-xl rounded-full flex items-center gap-3 animate-pulse">
+                    <span className="text-white text-sm font-bold">
+                        ⚠️ Recording limit: {Math.floor((FREE_RECORDING_LIMIT_SECONDS - recordingTime) / 60)} min remaining
+                    </span>
+                    <a 
+                        href="/checkout?plan=professional&interval=monthly" 
+                        className="px-4 py-1.5 bg-black/20 text-white text-xs font-bold rounded-full hover:bg-black/30 transition-colors"
+                    >
+                        UPGRADE
+                    </a>
                 </div>
             )}
 

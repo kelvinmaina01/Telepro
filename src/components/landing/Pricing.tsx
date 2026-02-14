@@ -6,8 +6,8 @@ import Link from "next/link";
 export const Pricing = () => {
     const [isYearly, setIsYearly] = React.useState(false);
 
-    const monthlyPrice = 3.99;
-    const yearlyPrice = 3.19; // ~20% discount
+    const monthlyPrice = 4.99;
+    const yearlyPrice = 2.99; // 40% discount ($35.88/year)
 
     return (
         <section id="pricing" className="py-32 bg-black relative">
@@ -28,7 +28,7 @@ export const Pricing = () => {
                             <div className={`w-6 h-6 bg-white rounded-full transition-all ${isYearly ? 'translate-x-6' : 'translate-x-0'}`} />
                         </button>
                         <span className={`text-sm transition-colors ${isYearly ? 'text-white' : 'text-zinc-500'}`}>yearly</span>
-                        <span className="px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-500 text-[10px] font-normal tracking-wider lowercase">save 20%</span>
+                        <span className="px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-500 text-[10px] font-normal tracking-wider lowercase">save 40%</span>
                     </div>
                 </div>
 
@@ -44,7 +44,7 @@ export const Pricing = () => {
                         </p>
                         <div className="space-y-4 mb-12">
                             {[
-                                "Up to 2,000 words per script",
+                                "Up to 1,500 words per script",
                                 "30 min max recording duration",
                                 "Default & OBS Camera access",
                                 "Standard Export",
