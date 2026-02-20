@@ -4,6 +4,7 @@ import { Features } from "@/components/landing/Features";
 import { Pricing } from "@/components/landing/Pricing";
 import { About } from "@/components/landing/About";
 import { Footer } from "@/components/landing/Footer";
+import { FreeAnnouncementInline } from "@/components/FreeAnnouncement";
 
 export default function LandingPage() {
   return (
@@ -11,6 +12,9 @@ export default function LandingPage() {
       <Navbar />
       <main>
         <Hero />
+        <div className="max-w-7xl mx-auto px-6">
+          <FreeAnnouncementInline />
+        </div>
         <Features />
         <Pricing />
         <About />
