@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Telepro Teleprompter</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: transparent;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        #telepro-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 2147483647; /* Maximum z-index */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+        
+        #telepro-text-container {
+            width: 100%;
+            height: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #telepro-text {
+            color: #ffffff;
+            font-size: 24px;
+            line-height: 1.6;
+            text-align: center;
+            white-space: pre-wrap;
+            max-width: 800px;
+            margin: 0 auto;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            transition: transform 0.1s linear;
+        }
+        
+        #telepro-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            gap: 10px;
+            z-index: 2147483648;
+        }
+        
+        .telepro-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            padding: 8px 12px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-family: inherit;
+            min-width: 40px;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .telepro-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .telepro-btn:active {
+            transform: scale(0.95);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            #telepro-text {
+                font-size: 20px;
+                padding: 20px;
+            }
+            
+            #telepro-controls {
+                top: 10px;
+                right: 10px;
+                padding: 8px;
+            }
+            
+            .telepro-btn {
+                min-width: 36px;
+                min-height: 36px;
+                font-size: 14px;
+                padding: 6px 10px;
+            }
+        }
+        
+        /* High contrast */
+        @media (prefers-contrast: high) {
+            #telepro-overlay {
+                background: rgba(0, 0, 0, 0.95);
+            }
+            
+            #telepro-text {
+                color: #ffffff;
+                text-shadow: 0 0 2px #000;
+            }
+        }
+        
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            #telepro-text {
+                transition: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="telepro-overlay" style="display: none;">
+        <div id="telepro-text-container">
+            <div id="telepro-text">
+                Telepro Teleprompter Ready
+            </div>
+        </div>
+        <div id="telepro-controls">
+            <button class="telepro-btn" title="Slow Down">⏪</button>
+            <button class="telepro-btn" title="Pause/Resume">⏸</button>
+            <button class="telepro-btn" title="Speed Up">⏩</button>
+            <button class="telepro-btn" title="Close">×</button>
+        </div>
+    </div>
+    
+    <script src="overlay.js"></script>
+</body>
+</html>

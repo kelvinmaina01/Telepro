@@ -1,0 +1,22 @@
+{
+  "name": "telepro-chrome-extension",
+  "version": "1.0.0",
+  "description": "Professional teleprompter Chrome extension",
+  "main": "src/background/worker.js",
+  "scripts": {
+    "dev": "echo 'No build required - load unpacked in Chrome'",
+    "lint": "echo 'No linting configured'",
+    "package": "zip -r telepro-extension.zip . -x '*.git*' 'node_modules/*' '*.zip'"
+  },
+  "keywords": [
+    "teleprompter",
+    "chrome-extension",
+    "video",
+    "recording",
+    "presentation"
+  ],
+  "author": "Telepro Team",
+  "license": "Proprietary",
+  "devDependencies": {},
+  "dependencies": {}
+}

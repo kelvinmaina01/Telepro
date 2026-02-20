@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Telepro Settings</title>
+    <style>
+        body {
+            width: 600px;
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            margin: 0 0 20px 0;
+            color: #333;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        h2 {
+            margin: 30px 0 15px 0;
+            color: #555;
+            font-size: 18px;
+            font-weight: 500;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 5px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            margin: 10px 0;
+        }
+        
+        select, input[type="color"] {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        input[type="color"] {
+            height: 40px;
+            padding: 2px;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+        }
+        
+        .value-display {
+            display: inline-block;
+            margin-left: 10px;
+            font-weight: 500;
+            color: #667eea;
+            min-width: 30px;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-right: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn.secondary {
+            background: #6b7280;
+        }
+        
+        .btn.danger {
+            background: #ef4444;
+        }
+        
+        .status {
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .status.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+            display: block;
+        }
+        
+        .status.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+            display: block;
+        }
+        
+        .shortcut-info {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        
+        .shortcut-info kbd {
+            background: #e5e7eb;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            border: 1px solid #d1d5db;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+            color: #6b7280;
+            font-size: 14px;
+        }
+        
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Telepro Settings</h1>
+        
+        <div id="status" class="status"></div>
+        
+        <div class="section">
+            <h2>Teleprompter Settings</h2>
+            
+            <div class="form-group">
+                <label for="defaultSpeed">Default Scroll Speed: <span id="speedValue" class="value-display">50</span></label>
+                <input type="range" id="defaultSpeed" min="10" max="100" value="50">
+            </div>
+            
+            <div class="form-group">
+                <label for="defaultFontSize">Default Font Size</label>
+                <select id="defaultFontSize">
+                    <option value="16">Small (16px)</option>
+                    <option value="20" selected>Medium (20px)</option>
+                    <option value="24">Large (24px)</option>
+                    <option value="28">Extra Large (28px)</option>
+                    <option value="32">Huge (32px)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="defaultTextColor">Default Text Color</label>
+                <input type="color" id="defaultTextColor" value="#ffffff">
+            </div>
+            
+            <div class="form-group">
+                <label for="defaultBgColor">Default Background Color</label>
+                <input type="color" id="defaultBgColor" value="#000000">
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" id="mirrorText">
+                <label for="mirrorText">Mirror text (for camera teleprompters)</label>
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" id="autoExtract">
+                <label for="autoExtract">Auto-extract text from pages</label>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Keyboard Shortcuts</h2>
+            
+            <div class="shortcut-info">
+                <p><strong>Default Shortcuts:</strong></p>
+                <ul>
+                    <li><kbd>Ctrl+Shift+P</kbd> - Toggle teleprompter overlay</li>
+                    <li><kbd>Ctrl+Shift+R</kbd> - Start/Stop recording mode</li>
+                    <li><kbd>Space</kbd> - Pause/Resume scrolling (when overlay active)</li>
+                    <li><kbd>Escape</kbd> - Close teleprompter overlay</li>
+                    <li><kbd>↑</kbd> / <kbd>↓</kbd> - Adjust scroll speed</li>
+                </ul>
+                <p><em>Note: You can change these shortcuts in Chrome's extension keyboard shortcuts settings.</em></p>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Account & Subscription</h2>
+            
+            <div id="accountStatus">
+                <p>Not signed in. <a href="https://telepro.harda.dev" target="_blank">Sign in on web app</a></p>
+            </div>
+            
+            <div class="form-group">
+                <button id="syncAccount" class="btn">Sync with Web App</button>
+                <button id="manageSubscription" class="btn secondary" disabled>Manage Subscription</button>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Data & Privacy</h2>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" id="analytics" checked>
+                <label for="analytics">Send anonymous usage analytics</label>
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" id="saveText" checked>
+                <label for="saveText">Save teleprompter text locally</label>
+            </div>
+            
+            <div class="form-group">
+                <button id="clearData" class="btn danger">Clear All Local Data</button>
+                <button id="exportData" class="btn secondary">Export Settings</button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Telepro Teleprompter v1.0.0</p>
+            <p>
+                <a href="https://telepro.harda.dev" target="_blank">Web App</a> • 
+                <a href="https://github.com/yourusername/telepro" target="_blank">GitHub</a> • 
+                <a href="mailto:support@telepro.harda.dev">Support</a>
+            </p>
+        </div>
+    </div>
+    
+    <script src="options.js"></script>
+</body>
+</html>

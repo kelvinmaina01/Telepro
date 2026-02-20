@@ -1,0 +1,121 @@
+/* Telepro Teleprompter Styles */
+
+#telepro-overlay {
+    /* Base styles are set in JS, but we add some CSS enhancements */
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+#telepro-text {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+#telepro-controls button {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-weight: 500;
+    min-width: 40px;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#telepro-controls button:hover {
+    background: rgba(255, 255, 255, 0.3) !important;
+}
+
+#telepro-controls button:active {
+    transform: scale(0.95);
+}
+
+/* Animation for text scrolling */
+@keyframes telepro-scroll {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(-100%);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    #telepro-text {
+        font-size: 20px !important;
+        padding: 20px;
+    }
+    
+    #telepro-controls {
+        top: 10px;
+        right: 10px;
+        padding: 8px;
+    }
+    
+    #telepro-controls button {
+        min-width: 36px;
+        min-height: 36px;
+        font-size: 14px;
+        padding: 6px 10px;
+    }
+}
+
+/* Print styles - hide teleprompter when printing */
+@media print {
+    #telepro-overlay {
+        display: none !important;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    #telepro-overlay {
+        background: rgba(0, 0, 0, 0.95) !important;
+    }
+    
+    #telepro-text {
+        color: #ffffff !important;
+        text-shadow: 0 0 2px #000;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    #telepro-text {
+        transition: none !important;
+    }
+}
+
+/* Dark mode adjustments (if overlay is light) */
+@media (prefers-color-scheme: dark) {
+    #telepro-overlay {
+        background: rgba(0, 0, 0, 0.9) !important;
+    }
+}
+
+/* Light mode adjustments */
+@media (prefers-color-scheme: light) {
+    #telepro-overlay {
+        background: rgba(255, 255, 255, 0.95) !important;
+    }
+    
+    #telepro-text {
+        color: #000000 !important;
+        text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+    }
+    
+    #telepro-controls {
+        background: rgba(255, 255, 255, 0.9) !important;
+    }
+    
+    #telepro-controls button {
+        background: rgba(0, 0, 0, 0.1) !important;
+        color: #000000 !important;
+        border-color: rgba(0, 0, 0, 0.2) !important;
+    }
+    
+    #telepro-controls button:hover {
+        background: rgba(0, 0, 0, 0.2) !important;
+    }
+}
