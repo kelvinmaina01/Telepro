@@ -84,3 +84,71 @@ export async function isUserPro(uid: string): Promise<boolean> {
 export function getCurrentUserId(): string | null {
   return auth.currentUser?.uid ?? null;
 }
+
+// Find user by Stripe customer ID
+export async function findUserByStripeCustomerId(customerId: string): Promise<UserProfile | null> {
+  try {
+    const usersRef = collection(db, "users");
+    const q = query(usersRef, where("stripeCustomerId", "==", customerId));
+    const querySnapshot = await getDocs(q);
+    
+    if (!querySnapshot.empty) {
+      const userDoc = querySnapshot.docs[0];
+      return userDoc.data() as UserProfile;
+    }
+    return null;
+  } catch (error) {
+    console.error("Error finding user by Stripe customer ID:", error);
+    return null;
+  }
+}
+
+// Log webhook events for debugging and retry purposes
+export interface WebhookLog {
+  eventId: string;
+  eventType: string;
+  status: "pending" | "processing" | "completed" | "failed";
+  attempts: number;
+  lastAttempt: Date;
+  error?: string;
+  metadata?: Record<string, any>;
+}
+
+export async function logWebhookEvent(
+  eventId: string,
+  eventType: string,
+  status: WebhookLog["status"],
+  attempts: number = 1,
+  error?: string,
+  metadata?: Record<string, any>
+): Promise<void> {
+  try {
+    const log: WebhookLog = {
+      eventId,
+      eventType,
+      status,
+      attempts,
+      lastAttempt: new Date(),
+      error,
+      metadata,
+    };
+    
+    await setDoc(doc(db, "webhook_logs", eventId), log);
+  } catch (error) {
+    console.error("Error logging webhook event:", error);
+  }
+}
+
+// Get webhook log for retry
+export async function getWebhookLog(eventId: string): Promise<WebhookLog | null> {
+  try {
+    const logDoc = await getDoc(doc(db, "webhook_logs", eventId));
+    if (logDoc.exists()) {
+      return logDoc.data() as WebhookLog;
+    }
+    return null;
+  } catch (error) {
+    console.error("Error fetching webhook log:", error);
+    return null;
+  }
+}

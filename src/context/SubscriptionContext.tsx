@@ -10,6 +10,7 @@ interface SubscriptionContextType {
   isPro: boolean;
   plan: SubscriptionPlan;
   refreshProfile: () => Promise<void>;
+  refreshAfterPayment: () => Promise<void>;
 }
 
 const SubscriptionContext = createContext<SubscriptionContextType | undefined>(undefined);
@@ -42,6 +43,16 @@ export const SubscriptionProvider = ({
     }
   }, [user]);
 
+  const refreshAfterPayment = useCallback(async () => {
+    if (!user) return;
+    
+    // Add a small delay to ensure Stripe webhook has processed
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // Refresh the profile to get updated subscription status
+    await fetchProfile();
+  }, [user, fetchProfile]);
+
   useEffect(() => {
     fetchProfile();
   }, [fetchProfile]);
@@ -56,7 +67,8 @@ export const SubscriptionProvider = ({
         loading, 
         isPro, 
         plan,
-        refreshProfile: fetchProfile 
+        refreshProfile: fetchProfile,
+        refreshAfterPayment: refreshAfterPayment
       }}
     >
       {children}

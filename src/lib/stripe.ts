@@ -23,7 +23,9 @@ export const STRIPE_PRICING = {
 
 // Server-side Stripe instance
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-    apiVersion: "2025-01-27.acacia",
+    apiVersion: "2024-11-20.acacia", // Stable API version
+    maxNetworkRetries: 3,
+    timeout: 15000,
 });
 
 // Create Stripe checkout session

@@ -1,8 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createCheckoutSession, STRIPE_PRICES } from "@/lib/stripe";
+import { STRIPE_PRICES, stripe } from "@/lib/stripe";
 import { getUserProfile, createUserProfile } from "@/lib/firestore";
 import { auth } from "@/lib/firebase";
-import { stripe } from "@/lib/stripe";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
+
+// Initialize rate limiter (using Upstash Redis)
+const ratelimit = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(5, "60 s"), // 5 requests per 60 seconds
+  analytics: true,
+});
 
 export async function POST(req: NextRequest) {
     try {
@@ -19,6 +27,29 @@ export async function POST(req: NextRequest) {
         const decodedToken = await auth.verifyIdToken(idToken);
         const userId = decodedToken.uid;
         const userEmail = decodedToken.email;
+
+        // Rate limiting check
+        const ip = req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || "127.0.0.1";
+        const { success, limit, reset, remaining } = await ratelimit.limit(`${ip}_${userId}`);
+        
+        if (!success) {
+            return NextResponse.json(
+                { 
+                    error: "Too many requests. Please try again later.",
+                    limit,
+                    reset: new Date(reset).toISOString(),
+                    remaining
+                },
+                { 
+                    status: 429,
+                    headers: {
+                        "X-RateLimit-Limit": limit.toString(),
+                        "X-RateLimit-Remaining": remaining.toString(),
+                        "X-RateLimit-Reset": new Date(reset).toISOString(),
+                    }
+                }
+            );
+        }
 
         // Get request body
         const body = await req.json();
@@ -43,6 +74,14 @@ export async function POST(req: NextRequest) {
             profile = await getUserProfile(userId);
         }
 
+        // Check if user already has an active pro subscription
+        if (profile?.plan === "pro" && profile?.subscriptionStatus === "active") {
+            return NextResponse.json(
+                { error: "You already have an active pro subscription" },
+                { status: 400 }
+            );
+        }
+
         // Build URLs
         const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://telepro.harda.dev";
         const successUrl = `${baseUrl}/checkout?success=true&session_id={CHECKOUT_SESSION_ID}`;
@@ -62,13 +101,28 @@ export async function POST(req: NextRequest) {
             customerId = customer.id;
         }
 
-        // Create checkout session
-        const session = await createCheckoutSession({
-            priceId,
-            customerId,
-            userId,
-            successUrl,
-            cancelUrl,
+        // Generate idempotency key from user ID and timestamp
+        const idempotencyKey = `checkout_${userId}_${Date.now()}`;
+
+        // Create checkout session with idempotency key
+        const session = await stripe.checkout.sessions.create({
+            mode: "subscription",
+            payment_method_types: ["card"],
+            line_items: [
+                {
+                    price: priceId,
+                    quantity: 1,
+                },
+            ],
+            success_url: successUrl,
+            cancel_url: cancelUrl,
+            customer: customerId,
+            metadata: {
+                userId,
+            },
+            allow_promotion_codes: true,
+        }, {
+            idempotencyKey,
         });
 
         return NextResponse.json({ url: session.url });
