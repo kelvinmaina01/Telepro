@@ -150,6 +150,7 @@ export default function RootLayout({
       </head>
       <body
         className={`${poppins.variable} font-sans antialiased`}
+        suppressHydrationWarning
       >
         <ClientProviders>
           {children}

@@ -167,11 +167,11 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                     <div className="flex items-center gap-4 bg-black/40 backdrop-blur-xl border border-white/10 rounded-3xl p-1 shadow-xl">
                         {/* Speed */}
                         <div className="relative group/tooltip flex flex-col gap-1 items-start px-3 py-2">
-                            <span className="text-[9px] font-black text-zinc-500 ml-1 tracking-widest uppercase">Speed</span>
+                            <span className="text-[9px] font-black text-white ml-1 tracking-widest uppercase">Speed</span>
                             <div className="flex items-center gap-1.5 px-2 py-1.5 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors group/input focus-within:border-blue-500/50">
                                 <button
                                     onClick={() => setSpeed(Math.max(1, speed - 1))}
-                                    className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-white/10 text-zinc-400 hover:text-white transition-colors"
+                                    className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-white/10 text-white transition-colors"
                                 >
                                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                                         <path d="M5 12h14" />
@@ -185,7 +185,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                                 </div>
                                 <button
                                     onClick={() => setSpeed(speed + 1)}
-                                    className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-white/10 text-zinc-400 hover:text-white transition-colors"
+                                    className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-white/10 text-white transition-colors"
                                 >
                                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                                         <path d="M12 5v14M5 12h14" />
@@ -205,11 +205,11 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
 
                         {/* Font Size */}
                         <div className="relative group/tooltip flex flex-col gap-1 items-start px-3 py-2">
-                            <span className="text-[9px] font-black text-zinc-500 ml-1 tracking-widest uppercase">Size</span>
+                            <span className="text-[9px] font-black text-white ml-1 tracking-widest uppercase">Size</span>
                             <div className="flex items-center gap-1.5 px-2 py-1.5 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors group/input focus-within:border-blue-500/50">
                                 <button
                                     onClick={() => setFontSize(Math.max(10, fontSize - 5))}
-                                    className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-white/10 text-zinc-400 hover:text-white transition-colors"
+                                    className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-white/10 text-white transition-colors"
                                 >
                                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                                         <path d="M5 12h14" />
@@ -223,7 +223,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                                 </div>
                                 <button
                                     onClick={() => setFontSize(fontSize + 5)}
-                                    className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-white/10 text-zinc-400 hover:text-white transition-colors"
+                                    className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-white/10 text-white transition-colors"
                                 >
                                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                                         <path d="M12 5v14M5 12h14" />
@@ -300,7 +300,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                         <div className="group/tooltip relative">
                             <button
                                 onClick={() => setIsMirrored(!isMirrored)}
-                                className={`flex flex-col items-center justify-center w-14 h-14 rounded-2xl transition-all duration-300 border ${isMirrored ? 'bg-blue-600/20 border-blue-500/40 text-blue-400' : 'bg-white/5 border-white/5 text-zinc-500 hover:text-white'}`}
+                                className={`flex flex-col items-center justify-center w-14 h-14 rounded-2xl transition-all duration-300 border ${isMirrored ? 'bg-blue-600/20 border-blue-500/40 text-blue-400' : 'bg-white/5 border-white/5 text-white hover:text-white'}`}
                             >
                                 <svg className="w-4 h-4 mb-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                                     <path d="M12 21V3M3 9l3-3 3 3M3 6h6M21 9l-3-3-3 3M21 6h-6" />
@@ -318,7 +318,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                         <div className="group/tooltip relative">
                             <button
                                 onClick={() => setIsReversed(!isReversed)}
-                                className={`flex flex-col items-center justify-center w-14 h-14 rounded-2xl transition-all duration-300 border ${isReversed ? 'bg-purple-600/20 border-purple-500/40 text-purple-400' : 'bg-white/5 border-white/5 text-zinc-500 hover:text-white'}`}
+                                className={`flex flex-col items-center justify-center w-14 h-14 rounded-2xl transition-all duration-300 border ${isReversed ? 'bg-purple-600/20 border-purple-500/40 text-purple-400' : 'bg-white/5 border-white/5 text-white hover:text-white'}`}
                             >
                                 <svg className="w-4 h-4 mb-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                                     <path d="M7 13l5-5 5 5M7 17l5-5 5 5" />
@@ -375,7 +375,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                         <div className="group/tooltip relative">
                             <button
                                 onClick={() => setIsEditorOpen(true)}
-                                className="flex flex-col items-center justify-center w-14 h-14 rounded-2xl bg-white/5 border border-white/5 text-zinc-500 hover:text-white transition-all duration-300 hover:bg-white/10 active:scale-95 group-hover/tooltip:border-blue-500/30"
+                                className="flex flex-col items-center justify-center w-14 h-14 rounded-2xl bg-white/5 border border-white/5 text-white hover:text-white transition-all duration-300 hover:bg-white/10 active:scale-95 group-hover/tooltip:border-blue-500/30"
                             >
                                 <svg className="w-4 h-4 mb-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                                     <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
@@ -394,7 +394,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                         <div className="relative group/tooltip">
                             <button
                                 onClick={() => setCountdownSeconds(countdownSeconds === 3 ? 5 : countdownSeconds === 5 ? 10 : countdownSeconds === 10 ? 0 : 3)}
-                                className="flex flex-col items-center justify-center w-14 h-14 rounded-2xl bg-white/5 border border-white/5 text-zinc-500 hover:text-white transition-all duration-300 active:scale-95 group-hover/tooltip:border-amber-500/30"
+                                className="flex flex-col items-center justify-center w-14 h-14 rounded-2xl bg-white/5 border border-white/5 text-white hover:text-white transition-all duration-300 active:scale-95 group-hover/tooltip:border-amber-500/30"
                             >
                                 <span className="text-sm font-black text-amber-500">{countdownSeconds}</span>
                                 <span className="text-[8px] font-black uppercase">Secs</span>
@@ -413,7 +413,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                         <div className="group/tooltip relative">
                             <button
                                 onClick={() => setIsDeviceSettingsOpen(true)}
-                                className="flex flex-col items-center justify-center w-14 h-14 bg-white/5 rounded-2xl border border-white/5 text-zinc-500 hover:text-white transition-all duration-300 hover:bg-white/10 active:scale-95 group-hover/tooltip:border-zinc-400/30 shrink-0"
+                                className="flex flex-col items-center justify-center w-14 h-14 bg-white/5 rounded-2xl border border-white/5 text-white hover:text-white transition-all duration-300 hover:bg-white/10 active:scale-95 group-hover/tooltip:border-zinc-400/30 shrink-0"
                             >
                                 <svg className="w-4 h-4 mb-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                                     <circle cx="12" cy="12" r="3" />
