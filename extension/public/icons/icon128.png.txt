@@ -1,8 +1,0 @@
-Placeholder icon - replace with 128x128 PNG
-You can create a simple icon with:
-- Blue background
-- White "T" letter
-- Or use your Telepro logo
-
-For now, create a simple icon using any image editor or use:
-https://www.canva.com/ or https://www.figma.com/
