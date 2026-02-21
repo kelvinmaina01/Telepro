@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+# Chrome extension development files
+extension/public/icons/*.txt
+extension/public/icons/*.png
+nul

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Poppins } from "next/font/google";
 import { AuthProvider } from "@/context/AuthContext";
+import { SubscriptionProvider } from "@/context/SubscriptionContext";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -131,6 +132,9 @@ const jsonLd = {
   ],
 };
 
+// Client component wrapper for context providers
+import { ClientProviders } from "./client-providers";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -147,9 +151,9 @@ export default function RootLayout({
       <body
         className={`${poppins.variable} font-sans antialiased`}
       >
-        <AuthProvider>
+        <ClientProviders>
           {children}
-        </AuthProvider>
+        </ClientProviders>
       </body>
     </html>
   );

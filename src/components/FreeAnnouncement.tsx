@@ -179,16 +179,16 @@ export const FreeAnnouncementInline = () => {
 };
 
 // Add CSS animation for floating elements
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes float {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-20px) rotate(10deg); }
-  }
-  .animate-float {
-    animation: float 3s ease-in-out infinite;
-  }
-`;
 if (typeof document !== 'undefined') {
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(10deg); }
+    }
+    .animate-float {
+      animation: float 3s ease-in-out infinite;
+    }
+  `;
   document.head.appendChild(style);
 }

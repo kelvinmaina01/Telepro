@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "Telepro Teleprompter",
+  "version": "1.0.0",
+  "description": "Professional teleprompter for video recording",
+  "permissions": ["storage", "activeTab", "scripting"],
+  "action": {
+    "default_popup": "src/popup/index.html",
+    "default_title": "Telepro"
+  },
+  "background": {
+    "service_worker": "src/background/worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["src/content/teleprompter.js"],
+      "css": ["src/content/teleprompter.css"]
+    }
+  ]
+}

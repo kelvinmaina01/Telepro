@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir /b \"C:\\\\Users\\\\dell\\\\Desktop\\\\telepro\\\\src\")",
+      "Bash(npm run dev:*)"
+    ]
+  }
+}
