@@ -105,8 +105,9 @@ export const CameraLayer: React.FC<CameraLayerProps> = ({
 
         setIsStreamReady(true);
         setError(null);
-      } catch {
-        setError("Camera access denied or unavailable.");
+      } catch (err) {
+        console.error("Camera access error:", err);
+        setError("Camera access denied or unavailable. Please click the 'Enable Camera' button and allow camera access when prompted.");
         // Notify parent to disable recording
         if (onCameraErrorRef.current) {
           onCameraErrorRef.current();

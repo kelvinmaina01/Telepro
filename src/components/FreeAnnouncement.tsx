@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { X } from "lucide-react";
 
 // Cartoon character SVG for announcement
@@ -96,21 +96,6 @@ export const FreeAnnouncement = () => {
 export const FreeAnnouncementInline = () => {
   return (
     <div className="relative bg-gradient-to-r from-purple-600 via-pink-500 to-rose-500 text-white p-8 rounded-3xl mb-10 shadow-2xl animate-pulse border-4 border-yellow-400 overflow-hidden">
-      {/* Animated background elements */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
-        {[...Array(20)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-2 h-2 bg-white/30 rounded-full animate-float"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${i * 0.5}s`,
-              animationDuration: `${3 + Math.random() * 4}s`
-            }}
-          />
-        ))}
-      </div>
       
       <div className="relative flex flex-col md:flex-row items-center gap-8">
         <div className="flex-shrink-0">
@@ -177,18 +162,3 @@ export const FreeAnnouncementInline = () => {
     </div>
   );
 };
-
-// Add CSS animation for floating elements
-if (typeof document !== 'undefined') {
-  const style = document.createElement('style');
-  style.textContent = `
-    @keyframes float {
-      0%, 100% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-20px) rotate(10deg); }
-    }
-    .animate-float {
-      animation: float 3s ease-in-out infinite;
-    }
-  `;
-  document.head.appendChild(style);
-}

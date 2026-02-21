@@ -10,6 +10,7 @@ import {
     updateProfile
 } from "firebase/auth";
 import { auth } from "@/lib/firebase";
+import { KofiButton } from "@/components/KofiButton";
 
 const AuthContent = () => {
     const { loginWithGoogle, user } = useAuth();
@@ -71,7 +72,7 @@ const AuthContent = () => {
                     {/* Google Auth */}
                     <button
                         onClick={loginWithGoogle}
-                        className="w-full h-14 bg-white text-black rounded-2xl font-normal flex items-center justify-center gap-3 hover:bg-zinc-200 transition-all active:scale-[0.98] lowercase"
+                        className="w-full h-14 bg-white text-black rounded-2xl font-normal flex items-center justify-center gap-3 hover:bg-zinc-200 transition-all active:scale-[0.98] lowercase cursor-pointer"
                     >
                         <svg className="w-5 h-5" viewBox="0 0 24 24">
                             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
@@ -120,7 +121,7 @@ const AuthContent = () => {
 
                         <button
                             type="submit"
-                            className="w-full h-14 bg-zinc-800 text-white rounded-2xl font-normal hover:bg-zinc-700 transition-all active:scale-[0.98] lowercase border border-white/5"
+                            className="w-full h-14 bg-zinc-800 text-white rounded-2xl font-normal hover:bg-zinc-700 transition-all active:scale-[0.98] lowercase border border-white/5 cursor-pointer"
                         >
                             {isLogin ? "sign in" : "create account"}
                         </button>
@@ -129,10 +130,21 @@ const AuthContent = () => {
                     <div className="text-center pt-4">
                         <button
                             onClick={() => setIsLogin(!isLogin)}
-                            className="text-zinc-500 text-sm hover:text-white transition-colors lowercase"
+                            className="text-zinc-500 text-sm hover:text-white transition-colors lowercase cursor-pointer"
                         >
                             {isLogin ? "don't have an account? create one" : "already have an account? sign in"}
                         </button>
+                    </div>
+
+                    {/* Buy Me a Coffee Button */}
+                    <div className="pt-8 border-t border-white/10 mt-8">
+                        <div className="text-center mb-4">
+                            <p className="text-zinc-500 text-sm mb-4">Enjoying Telepro? Support the developer!</p>
+                            <div className="flex items-center justify-center gap-4">
+                                <KofiButton size="md" />
+                                <span className="text-sm text-zinc-400">Support the developer</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

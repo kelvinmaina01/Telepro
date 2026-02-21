@@ -9,10 +9,7 @@ import { ControlPanel } from "./ControlPanel";
 import { CountdownOverlay } from "./CountdownOverlay";
 import { VideoReviewModal } from "./VideoReviewModal";
 import { OnboardingModal } from "./OnboardingModal";
-
-// Pricing limits from payment.md
-const FREE_RECORDING_LIMIT_SECONDS = 30 * 60; // 30 minutes in seconds
-const RECORDING_WARNING_THRESHOLD = 25 * 60; // 25 minutes
+import { FloatingKofiIcon } from "@/components/FloatingKofiIcon";
 
 const DEFAULT_SCRIPT = `Welcome to TelePro!
 
@@ -26,12 +23,7 @@ export const PrompterContainer = () => {
     const { user, loading, userProfile } = useAuth();
     const router = useRouter();
 
-    // Check if user is Pro
-    const isPro = userProfile?.plan === "pro";
-    const recordingLimit = isPro ? Infinity : FREE_RECORDING_LIMIT_SECONDS;
-
     const [text, setText] = useState(DEFAULT_SCRIPT);
-    const [showRecordingWarning, setShowRecordingWarning] = useState(false);
 
     const [speed, setSpeed] = useState(20);
     const [fontSize, setFontSize] = useState(60);
@@ -39,7 +31,7 @@ export const PrompterContainer = () => {
     const [isMirrored, setIsMirrored] = useState(false);
     const [isReversed, setIsReversed] = useState(false);
     const [textColor, setTextColor] = useState("#ffffff");
-    const [isRecordingEnabled, setIsRecordingEnabled] = useState(true);
+    const [isRecordingEnabled, setIsRecordingEnabled] = useState(false);
     const [recordingTime, setRecordingTime] = useState(0);
     const [countdownSeconds, setCountdownSeconds] = useState(3);
     const [isCountingDown, setIsCountingDown] = useState(false);
@@ -60,21 +52,7 @@ export const PrompterContainer = () => {
     // Recording is active from first play until stop is pressed
     const isRecording = hasStarted && isRecordingEnabled && !shouldStopRecording;
 
-    // Check recording time limits
-    useEffect(() => {
-        // Show warning when approaching limit
-        if (!isPro && recordingTime >= RECORDING_WARNING_THRESHOLD && recordingTime < recordingLimit) {
-            setShowRecordingWarning(true);
-        }
-        
-        // Auto-stop when limit reached
-        if (!isPro && recordingTime >= recordingLimit) {
-            handleStop();
-            setShowRecordingWarning(false);
-            // Show alert that recording was auto-stopped
-            alert("Recording limit reached! Upgrade to Pro for unlimited recording time.");
-        }
-    }, [recordingTime, isPro, recordingLimit]);
+    // No recording limits - everything is free!
 
     const handlePlayPause = useCallback(() => {
         if (isPlaying) {
@@ -257,36 +235,26 @@ export const PrompterContainer = () => {
                 onDiscard={handleDiscard}
             />
 
-            {/* Floating Plan Profile */}
+            {/* Floating User Profile */}
             {user && (
                 <div className="fixed top-6 right-6 z-50 flex items-center gap-3 bg-white/5 backdrop-blur-xl border border-white/10 p-2 pr-5 rounded-full hover:bg-white/10 transition-all group select-none">
                     <div className="w-9 h-9 bg-white rounded-full flex items-center justify-center text-black font-black text-xs">
                         {user.displayName ? user.displayName.substring(0, 2).toUpperCase() : user.email?.substring(0, 2).toUpperCase()}
                     </div>
                     <div className="flex flex-col">
-                        <span className="text-[10px] font-normal tracking-[0.2em] text-zinc-500 lowercase leading-none mb-1">current plan</span>
-                        <span className="text-xs font-normal text-white lowercase leading-none">{isPro ? "pro" : "starter"}</span>
+                        <span className="text-[10px] font-normal tracking-[0.2em] text-zinc-500 lowercase leading-none mb-1">welcome</span>
+                        <span className="text-xs font-normal text-white lowercase leading-none">free user</span>
                     </div>
 
                     {/* Subtle indicator */}
-                    <div className={`ml-2 w-1.5 h-1.5 rounded-full animate-pulse ${isPro ? 'bg-emerald-500' : 'bg-cyan-500'}`} />
+                    <div className="ml-2 w-1.5 h-1.5 rounded-full animate-pulse bg-emerald-500" />
                 </div>
             )}
 
-            {/* Recording Warning */}
-            {showRecordingWarning && !isPro && (
-                <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 px-6 py-3 bg-amber-500/90 backdrop-blur-xl rounded-full flex items-center gap-3 animate-pulse">
-                    <span className="text-white text-sm font-bold">
-                        ⚠️ Recording limit: {Math.floor((FREE_RECORDING_LIMIT_SECONDS - recordingTime) / 60)} min remaining
-                    </span>
-                    <a 
-                        href="/checkout?plan=professional&interval=monthly" 
-                        className="px-4 py-1.5 bg-black/20 text-white text-xs font-bold rounded-full hover:bg-black/30 transition-colors"
-                    >
-                        UPGRADE
-                    </a>
-                </div>
-            )}
+            {/* Floating Ko-fi Icon near user profile */}
+            <FloatingKofiIcon position="prompter" />
+
+
 
             <OnboardingModal />
         </div>
