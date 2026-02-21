@@ -5,6 +5,7 @@ import { Pricing } from "@/components/landing/Pricing";
 import { About } from "@/components/landing/About";
 import { Footer } from "@/components/landing/Footer";
 import { FreeAnnouncementInline } from "@/components/FreeAnnouncement";
+import { VideoDemo } from "@/components/landing/VideoDemo";
 
 export default function LandingPage() {
   return (
@@ -15,6 +16,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-6">
           <FreeAnnouncementInline />
         </div>
+        <VideoDemo />
         <Features />
         <Pricing />
         <About />

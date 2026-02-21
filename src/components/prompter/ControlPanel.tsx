@@ -387,7 +387,9 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                 isOpen={isEditorOpen}
                 onClose={() => setIsEditorOpen(false)}
                 text={text}
-                setText={setText}
+                onSave={setText}
+                textColor={textColor}
+                setTextColor={setTextColor}
             />
 
             <DeviceSettingsModal
@@ -396,8 +398,6 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                 selectedVideoDevice={selectedVideoDevice}
                 selectedAudioDevice={selectedAudioDevice}
                 onDeviceChange={onDeviceChange}
-                textColor={textColor}
-                setTextColor={setTextColor}
             />
         </>
     );

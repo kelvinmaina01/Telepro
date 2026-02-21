@@ -1,34 +1,68 @@
-import Stripe from "stripe";
+// Stripe is disabled since we're not monetizing
+// These are dummy implementations to prevent build errors
 
-// Stripe pricing IDs from your payment.md
-// Monthly: $4.99/mo, Yearly: $35.88/yr (billed annually - 40% discount)
 export const STRIPE_PRICES = {
-    monthly: process.env.NEXT_PUBLIC_STRIPE_MONTHLY_PRICE_ID || "price_monthly_placeholder",
-    yearly: process.env.NEXT_PUBLIC_STRIPE_YEARLY_PRICE_ID || "price_yearly_placeholder",
+    monthly: "disabled",
+    yearly: "disabled",
 };
 
 export const STRIPE_PRICING = {
     monthly: {
-        amount: 4.99,
+        amount: 0,
         currency: "usd",
         interval: "month",
     },
     yearly: {
-        amount: 35.88,
+        amount: 0,
         currency: "usd",
         interval: "year",
-        savings: "40%",
+        savings: "0%",
     },
 };
 
-// Server-side Stripe instance
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-    apiVersion: "2024-11-20.acacia", // Stable API version
-    maxNetworkRetries: 3,
-    timeout: 15000,
-});
+// Dummy stripe instance
+export const stripe = {
+    checkout: {
+        sessions: {
+            create: async () => {
+                console.log("Stripe checkout is disabled - not monetizing");
+                return { url: "/" };
+            }
+        }
+    },
+    billingPortal: {
+        sessions: {
+            create: async () => {
+                console.log("Stripe billing portal is disabled - not monetizing");
+                return { url: "/" };
+            }
+        }
+    },
+    subscriptions: {
+        retrieve: async () => {
+            console.log("Stripe subscription retrieval is disabled - not monetizing");
+            return {
+                status: "active",
+                current_period_end: Date.now() / 1000 + 30 * 24 * 60 * 60, // 30 days from now
+                cancel_at_period_end: false
+            };
+        }
+    },
+    customers: {
+        create: async () => {
+            console.log("Stripe customer creation is disabled - not monetizing");
+            return { id: "demo-customer-id" };
+        }
+    },
+    webhooks: {
+        constructEvent: () => {
+            console.log("Stripe webhook is disabled - not monetizing");
+            return { type: "checkout.session.completed", data: { object: {} } };
+        }
+    }
+};
 
-// Create Stripe checkout session
+// Create Stripe checkout session (dummy)
 export async function createCheckoutSession({
     priceId,
     customerId,
@@ -42,28 +76,11 @@ export async function createCheckoutSession({
     successUrl: string;
     cancelUrl: string;
 }) {
-    const session = await stripe.checkout.sessions.create({
-        mode: "subscription",
-        payment_method_types: ["card"],
-        line_items: [
-            {
-                price: priceId,
-                quantity: 1,
-            },
-        ],
-        success_url: successUrl,
-        cancel_url: cancelUrl,
-        customer: customerId,
-        metadata: {
-            userId,
-        },
-        allow_promotion_codes: true,
-    });
-
-    return session;
+    console.log("Stripe checkout is disabled - not monetizing");
+    return { url: successUrl };
 }
 
-// Create customer portal session
+// Create customer portal session (dummy)
 export async function createPortalSession({
     customerId,
     returnUrl,
@@ -71,20 +88,16 @@ export async function createPortalSession({
     customerId: string;
     returnUrl: string;
 }) {
-    const session = await stripe.billingPortal.sessions.create({
-        customer: customerId,
-        return_url: returnUrl,
-    });
-
-    return session;
+    console.log("Stripe portal is disabled - not monetizing");
+    return { url: returnUrl };
 }
 
-// Get subscription status
+// Get subscription status (dummy)
 export async function getSubscriptionStatus(subscriptionId: string) {
-    const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+    console.log("Stripe subscription status is disabled - not monetizing");
     return {
-        status: subscription.status,
-        currentPeriodEnd: new Date(subscription.current_period_end * 1000),
-        cancelAtPeriodEnd: subscription.cancel_at_period_end,
+        status: "active",
+        currentPeriodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
+        cancelAtPeriodEnd: false,
     };
 }
