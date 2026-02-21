@@ -48,16 +48,25 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       break;
       
     case 'TOGGLE_TELEPROMPTER':
+      console.log('TOGGLE_TELEPROMPTER received, current state:', state.teleprompterActive);
       state.teleprompterActive = !state.teleprompterActive;
       saveState();
+      console.log('New teleprompter state:', state.teleprompterActive);
       
       // Notify all tabs to update teleprompter visibility
       chrome.tabs.query({}, (tabs) => {
+        console.log('Notifying', tabs.length, 'tabs about teleprompter toggle');
         tabs.forEach(tab => {
           if (tab.id) {
             chrome.tabs.sendMessage(tab.id, {
               type: 'TELEPROMPTER_TOGGLE',
               active: state.teleprompterActive
+            }, (response) => {
+              if (chrome.runtime.lastError) {
+                console.log('Error sending to tab', tab.id, ':', chrome.runtime.lastError.message);
+              } else {
+                console.log('Message sent to tab', tab.id, 'successfully');
+              }
             });
           }
         });
@@ -84,14 +93,18 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       break;
       
     case 'START_RECORDING':
+      console.log('START_RECORDING received');
       state.recording = true;
       saveState();
+      console.log('Recording started');
       sendResponse({ success: true, recording: true });
       break;
       
     case 'STOP_RECORDING':
+      console.log('STOP_RECORDING received');
       state.recording = false;
       saveState();
+      console.log('Recording stopped');
       sendResponse({ success: true, recording: false });
       break;
       

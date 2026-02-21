@@ -32,8 +32,14 @@ document.addEventListener('DOMContentLoaded', function() {
     updateUI();
     
     // Event Listeners
-    toggleTeleprompterBtn.addEventListener('click', toggleTeleprompter);
-    startRecordingBtn.addEventListener('click', toggleRecording);
+    toggleTeleprompterBtn.addEventListener('click', function() {
+        console.log('Toggle teleprompter button clicked');
+        toggleTeleprompter();
+    });
+    startRecordingBtn.addEventListener('click', function() {
+        console.log('Start recording button clicked');
+        toggleRecording();
+    });
     
     teleprompterText.addEventListener('input', function() {
         updateTextLength();
@@ -117,28 +123,37 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function toggleTeleprompter() {
+        console.log('toggleTeleprompter function called');
         chrome.runtime.sendMessage(
             { type: 'TOGGLE_TELEPROMPTER' },
             function(response) {
+                console.log('Toggle teleprompter response:', response);
                 if (response && response.success) {
                     state.teleprompterActive = response.active;
                     saveState();
                     updateUI();
+                } else {
+                    console.error('Toggle teleprompter failed:', response);
                 }
             }
         );
     }
     
     function toggleRecording() {
+        console.log('toggleRecording called, current state:', state.recording);
         const messageType = state.recording ? 'STOP_RECORDING' : 'START_RECORDING';
+        console.log('Sending message type:', messageType);
         
         chrome.runtime.sendMessage(
             { type: messageType },
             function(response) {
+                console.log('Recording response:', response);
                 if (response && response.success) {
                     state.recording = response.recording;
                     saveState();
                     updateUI();
+                } else {
+                    console.error('Recording failed:', response);
                 }
             }
         );
