@@ -1,5 +1,5 @@
 import { initializeApp, getApps, FirebaseApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, Auth } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, Auth, User } from "firebase/auth";
 import { getFirestore, Firestore } from "firebase/firestore";
 
 // Check if Firebase config is available
@@ -12,6 +12,58 @@ let app: FirebaseApp | undefined;
 let auth: Auth;
 let db: Firestore;
 let googleProvider: GoogleAuthProvider;
+
+// Create proper dummy implementations for demo mode
+const createDummyAuth = (): Auth => {
+  const dummyAuth = {
+    currentUser: null as User | null,
+    onAuthStateChanged: (callback: (user: User | null) => void) => {
+      // Call immediately with null user for demo mode
+      callback(null);
+      return () => {}; // Return unsubscribe function
+    },
+    signInWithPopup: async () => {
+      console.log("Firebase auth is disabled - running in demo mode");
+      // Return a dummy user for demo mode
+      return {
+        user: {
+          uid: "demo-user-id",
+          email: "demo@example.com",
+          displayName: "Demo User",
+        } as User,
+      } as any;
+    },
+    signOut: async () => {
+      console.log("Firebase signOut is disabled - running in demo mode");
+    },
+  } as any;
+  return dummyAuth;
+};
+
+const createDummyFirestore = (): Firestore => {
+  const dummyFirestore = {
+    collection: () => ({
+      doc: () => ({
+        get: async () => ({ exists: false, data: () => null }),
+        set: async () => {},
+        update: async () => {},
+      }),
+      where: () => ({
+        get: async () => ({ empty: true, docs: [] }),
+      }),
+    }),
+    doc: () => ({
+      get: async () => ({ exists: false, data: () => null }),
+      set: async () => {},
+      update: async () => {},
+    }),
+  } as any;
+  return dummyFirestore;
+};
+
+const createDummyGoogleProvider = (): GoogleAuthProvider => {
+  return {} as GoogleAuthProvider;
+};
 
 try {
   if (hasFirebaseConfig) {
@@ -34,18 +86,18 @@ try {
     console.log("Firebase initialized successfully");
   } else {
     console.log("Firebase config not available - running in demo mode");
-    // Create dummy objects for demo mode with proper types
-    auth = {} as Auth;
-    db = {} as Firestore;
-    googleProvider = {} as GoogleAuthProvider;
+    // Create proper dummy objects for demo mode
+    auth = createDummyAuth();
+    db = createDummyFirestore();
+    googleProvider = createDummyGoogleProvider();
   }
 } catch (error) {
   console.error("Firebase initialization failed:", error);
   console.log("Running in demo mode without Firebase");
-  // Create dummy objects for demo mode with proper types
-  auth = {} as Auth;
-  db = {} as Firestore;
-  googleProvider = {} as GoogleAuthProvider;
+  // Create proper dummy objects for demo mode
+  auth = createDummyAuth();
+  db = createDummyFirestore();
+  googleProvider = createDummyGoogleProvider();
 }
 
 export { auth, db, googleProvider };

@@ -18,6 +18,18 @@ export interface UserProfile {
 // Get user profile from Firestore
 export async function getUserProfile(uid: string): Promise<UserProfile | null> {
   try {
+    // Check if db is a dummy object (demo mode)
+    if (!db || Object.keys(db).length === 0) {
+      console.log("Firestore is in demo mode - returning demo profile");
+      return {
+        uid,
+        email: "demo@example.com",
+        displayName: "Demo User",
+        plan: "free" as SubscriptionPlan,
+        createdAt: new Date(),
+      };
+    }
+    
     const userDoc = await getDoc(doc(db, "users", uid));
     if (userDoc.exists()) {
       return userDoc.data() as UserProfile;
@@ -47,6 +59,12 @@ export async function createUserProfile(
   displayName: string | null
 ): Promise<void> {
   try {
+    // Check if db is a dummy object (demo mode)
+    if (!db || Object.keys(db).length === 0) {
+      console.log("Firestore is in demo mode - skipping profile creation");
+      return;
+    }
+    
     const userProfile: UserProfile = {
       uid,
       email,
@@ -75,6 +93,12 @@ export async function updateUserSubscription(
   subscriptionStatus?: string
 ): Promise<void> {
   try {
+    // Check if db is a dummy object (demo mode)
+    if (!db || Object.keys(db).length === 0) {
+      console.log("Firestore is in demo mode - skipping subscription update");
+      return;
+    }
+    
     const updates: Partial<UserProfile> = {
       plan,
     };
@@ -109,6 +133,12 @@ export function getCurrentUserId(): string | null {
 // Find user by Stripe customer ID
 export async function findUserByStripeCustomerId(customerId: string): Promise<UserProfile | null> {
   try {
+    // Check if db is a dummy object (demo mode)
+    if (!db || Object.keys(db).length === 0) {
+      console.log("Firestore is in demo mode - skipping user search");
+      return null;
+    }
+    
     const usersRef = collection(db, "users");
     const q = query(usersRef, where("stripeCustomerId", "==", customerId));
     const querySnapshot = await getDocs(q);
@@ -149,6 +179,12 @@ export async function logWebhookEvent(
   metadata?: Record<string, any>
 ): Promise<void> {
   try {
+    // Check if db is a dummy object (demo mode)
+    if (!db || Object.keys(db).length === 0) {
+      console.log("Firestore is in demo mode - skipping webhook logging");
+      return;
+    }
+    
     const log: WebhookLog = {
       eventId,
       eventType,
@@ -173,6 +209,12 @@ export async function logWebhookEvent(
 // Get webhook log for retry
 export async function getWebhookLog(eventId: string): Promise<WebhookLog | null> {
   try {
+    // Check if db is a dummy object (demo mode)
+    if (!db || Object.keys(db).length === 0) {
+      console.log("Firestore is in demo mode - skipping webhook log fetch");
+      return null;
+    }
+    
     const logDoc = await getDoc(doc(db, "webhook_logs", eventId));
     if (logDoc.exists()) {
       return logDoc.data() as WebhookLog;
