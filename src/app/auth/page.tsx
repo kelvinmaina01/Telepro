@@ -4,12 +4,6 @@ import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { useSearchParams, useRouter } from "next/navigation";
-import {
-    signInWithEmailAndPassword,
-    createUserWithEmailAndPassword,
-    updateProfile
-} from "firebase/auth";
-import { auth } from "@/lib/firebase";
 import { KofiButton } from "@/components/KofiButton";
 
 const AuthContent = () => {
@@ -18,10 +12,6 @@ const AuthContent = () => {
     const searchParams = useSearchParams();
     const redirectUrl = searchParams.get("redirect") || "/prompter";
 
-    const [isLogin, setIsLogin] = useState(true);
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [name, setName] = useState("");
     const [error, setError] = useState("");
 
     // Redirect if already logged in
@@ -31,20 +21,9 @@ const AuthContent = () => {
         }
     }, [user, router, redirectUrl]);
 
-    const handleEmailAuth = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setError("");
-
+    const handleGoogleAuth = async () => {
         try {
-            if (isLogin) {
-                await signInWithEmailAndPassword(auth, email, password);
-            } else {
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                if (name) {
-                    await updateProfile(userCredential.user, { displayName: name });
-                }
-            }
-            router.push(redirectUrl);
+            await loginWithGoogle();
         } catch (err: any) {
             setError(err.message || "an error occurred during authentication");
         }
@@ -61,17 +40,17 @@ const AuthContent = () => {
                         <span className="text-xl font-normal text-white tracking-tighter lowercase">telepro</span>
                     </Link>
                     <h1 className="text-4xl font-normal tracking-tighter lowercase mb-4">
-                        {isLogin ? "welcome back" : "create account"}
+                        Sign in to TelePro
                     </h1>
                     <p className="text-zinc-500 lowercase">
-                        {isLogin ? "sign in to your professional prompter" : "join telepro to unlock advanced features"}
+                        Use Google to sign in and access your teleprompter
                     </p>
                 </div>
 
                 <div className="space-y-6">
-                    {/* Google Auth */}
+                    {/* Google Auth - Only authentication method available */}
                     <button
-                        onClick={loginWithGoogle}
+                        onClick={handleGoogleAuth}
                         className="w-full h-14 bg-white text-black rounded-2xl font-normal flex items-center justify-center gap-3 hover:bg-zinc-200 transition-all active:scale-[0.98] lowercase cursor-pointer"
                     >
                         <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -83,58 +62,16 @@ const AuthContent = () => {
                         continue with google
                     </button>
 
-                    <div className="relative flex items-center gap-4 py-2">
-                        <div className="flex-1 h-px bg-white/10" />
-                        <span className="text-[10px] uppercase tracking-widest text-zinc-600 font-bold">or email</span>
-                        <div className="flex-1 h-px bg-white/10" />
+                    <div className="text-center py-4">
+                        <p className="text-zinc-500 text-sm mb-2">
+                            Google authentication is the only method available in demo mode.
+                        </p>
+                        <p className="text-zinc-600 text-xs">
+                            Email/password authentication is disabled.
+                        </p>
                     </div>
 
-                    {/* Email Form */}
-                    <form onSubmit={handleEmailAuth} className="space-y-4">
-                        {!isLogin && (
-                            <input
-                                type="text"
-                                placeholder="name"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                className="w-full h-14 bg-zinc-900 border border-white/5 rounded-2xl px-6 text-white placeholder:text-zinc-600 focus:outline-none focus:border-white/20 focus:bg-zinc-800/50 transition-all lowercase"
-                            />
-                        )}
-                        <input
-                            type="email"
-                            placeholder="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="w-full h-14 bg-zinc-900 border border-white/5 rounded-2xl px-6 text-white placeholder:text-zinc-600 focus:outline-none focus:border-white/20 focus:bg-zinc-800/50 transition-all lowercase"
-                            required
-                        />
-                        <input
-                            type="password"
-                            placeholder="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="w-full h-14 bg-zinc-900 border border-white/5 rounded-2xl px-6 text-white placeholder:text-zinc-600 focus:outline-none focus:border-white/20 focus:bg-zinc-800/50 transition-all lowercase"
-                            required
-                        />
-
-                        {error && <p className="text-rose-500 text-xs text-center lowercase">{error}</p>}
-
-                        <button
-                            type="submit"
-                            className="w-full h-14 bg-zinc-800 text-white rounded-2xl font-normal hover:bg-zinc-700 transition-all active:scale-[0.98] lowercase border border-white/5 cursor-pointer"
-                        >
-                            {isLogin ? "sign in" : "create account"}
-                        </button>
-                    </form>
-
-                    <div className="text-center pt-4">
-                        <button
-                            onClick={() => setIsLogin(!isLogin)}
-                            className="text-zinc-500 text-sm hover:text-white transition-colors lowercase cursor-pointer"
-                        >
-                            {isLogin ? "don't have an account? create one" : "already have an account? sign in"}
-                        </button>
-                    </div>
+                    {error && <p className="text-rose-500 text-xs text-center lowercase">{error}</p>}
 
                     {/* Buy Me a Coffee Button */}
                     <div className="pt-8 border-t border-white/10 mt-8">
