@@ -16,7 +16,7 @@
 
 **TelePro is a form of a teleprompter and or I would call it an autocue.** An autocue is basically a display device that allows speakers to display or to read script. We explore the TelePro application, focusing on its setup for effective teleprompter practice. This video shows how to prepare a script and adjust text settings, essential for any video script app. It's a great demonstration of how to use a teleprompter for quick build checks and ensuring everything functions as expected.
 
-🌐 **Live Demo**: [telepro.harda.dev](https://telepro.harda.dev)
+🌐 **Live Demo**: [[telepro.harda.dev](https://telepro.harda.dev](https://telerepo.netlify.app/prompter))
 
 ---
 
