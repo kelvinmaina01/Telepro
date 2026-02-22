@@ -2,12 +2,9 @@
 
 import React from "react";
 import Link from "next/link";
-import { useAuth } from "@/context/AuthContext";
 import { KofiButton } from "@/components/KofiButton";
 
 export const Navbar = () => {
-    const { user, logout } = useAuth();
-
     return (
         <nav className="fixed top-0 left-0 right-0 z-50 bg-black/50 backdrop-blur-md border-b border-white/5">
             <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
@@ -36,30 +33,12 @@ export const Navbar = () => {
                         <KofiButton size="sm" />
                     </div>
                     
-                    {user ? (
-                        <div className="flex items-center gap-4">
-                            <Link href="/prompter" className="text-sm font-normal text-zinc-400 hover:text-white transition-colors lowercase cursor-pointer">app</Link>
-                            <button
-                                onClick={logout}
-                                className="px-6 h-11 bg-zinc-900 text-white text-sm font-normal rounded-xl hover:bg-zinc-800 transition-all active:scale-95 flex items-center justify-center lowercase border border-white/5 cursor-pointer"
-                            >
-                                sign out
-                            </button>
-                            <div className="w-9 h-9 bg-white rounded-full flex items-center justify-center text-black font-black text-xs select-none cursor-pointer">
-                                {user.displayName ? user.displayName.substring(0, 2).toUpperCase() : user.email?.substring(0, 2).toUpperCase()}
-                            </div>
-                        </div>
-                    ) : (
-                        <div className="flex items-center gap-4">
-                            <Link href="/auth" className="text-sm font-normal text-zinc-400 hover:text-white transition-colors lowercase mr-2 cursor-pointer">sign in</Link>
-                            <Link
-                                href="/prompter"
-                                className="px-6 h-11 bg-white text-black text-sm font-normal rounded-xl hover:bg-zinc-200 transition-all active:scale-95 flex items-center justify-center lowercase cursor-pointer"
-                            >
-                                launch app
-                            </Link>
-                        </div>
-                    )}
+                    <Link
+                        href="/prompter"
+                        className="px-6 h-11 bg-white text-black text-sm font-normal rounded-xl hover:bg-zinc-200 transition-all active:scale-95 flex items-center justify-center lowercase cursor-pointer"
+                    >
+                        launch app
+                    </Link>
                 </div>
             </div>
         </nav>

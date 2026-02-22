@@ -31,14 +31,11 @@ export const About = () => {
 
                     <div className="relative group">
                         <div className="aspect-video w-full bg-zinc-900 rounded-[32px] overflow-hidden border border-white/10 shadow-2xl relative">
-                            {/* YouTube Embed Placeholder */}
-                            <iframe
-                                className="absolute inset-0 w-full h-full"
-                                src="https://www.youtube.com/embed/dQw4w9WgXcQ?controls=0&rel=0"
-                                title="TelePro Demo"
-                                frameBorder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
+                            {/* LinkedIn Image */}
+                            <img
+                                src="https://media.licdn.com/dms/image/v2/D4D22AQGbNJl9nSqhFQ/feedshare-shrink_2048_1536/B4DZyCG3NjJoAk-/0/1771709363341?e=1773273600&v=beta&t=-GDaIdY3iOTCzvDQHwAsJTlVskMP8gVi_bwkf-QAMmc"
+                                alt="TelePro Professional Teleprompter in Action"
+                                className="absolute inset-0 w-full h-full object-cover"
                             />
 
                             {/* Subtle overlay to match aesthetics when not playing */}

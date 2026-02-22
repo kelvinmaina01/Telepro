@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState, useCallback, useEffect } from "react";
-import { useAuth } from "@/context/AuthContext";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { CameraLayer } from "./CameraLayer";
 import { TextLayer } from "./TextLayer";
 import { ControlPanel } from "./ControlPanel";
@@ -20,9 +19,6 @@ You can adjust speed, font size, and text color.
 Good luck with your recording!`;
 
 export const PrompterContainer = () => {
-    const { user, loading, userProfile } = useAuth();
-    const router = useRouter();
-
     const [text, setText] = useState(DEFAULT_SCRIPT);
 
     const [speed, setSpeed] = useState(20);
@@ -114,12 +110,6 @@ export const PrompterContainer = () => {
     const handleDownload = useCallback(() => {
         if (!recordedVideoUrl) return;
 
-        // AUTH CHECK: User must be signed in to download
-        if (!user) {
-            router.push(`/auth?redirect=/prompter`);
-            return;
-        }
-
         const a = document.createElement("a");
         a.style.display = "none";
         a.href = recordedVideoUrl;
@@ -130,7 +120,7 @@ export const PrompterContainer = () => {
             document.body.removeChild(a);
         }, 100);
         setIsReviewModalOpen(false);
-    }, [recordedVideoUrl, user, router]);
+    }, [recordedVideoUrl]);
 
     const handleReRecord = useCallback(() => {
         setIsReviewModalOpen(false);
@@ -170,6 +160,23 @@ export const PrompterContainer = () => {
 
     return (
         <div className="relative h-screen w-screen bg-black text-white overflow-hidden">
+            {/* Home Button - Top Right */}
+            <Link
+                href="/"
+                className="absolute top-6 right-6 z-50 w-10 h-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center hover:bg-white/20 hover:scale-110 transition-all duration-200 group"
+                title="Return to Home"
+            >
+                <svg 
+                    className="w-5 h-5 text-white group-hover:text-white/90 transition-colors" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24" 
+                    strokeWidth="2"
+                >
+                    <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+            </Link>
+
             <CameraLayer
                 isRecording={isRecording}
                 shouldStopRecording={shouldStopRecording}
@@ -235,26 +242,8 @@ export const PrompterContainer = () => {
                 onDiscard={handleDiscard}
             />
 
-            {/* Floating User Profile */}
-            {user && (
-                <div className="fixed top-6 right-6 z-50 flex items-center gap-3 bg-white/5 backdrop-blur-xl border border-white/10 p-2 pr-5 rounded-full hover:bg-white/10 transition-all group select-none">
-                    <div className="w-9 h-9 bg-white rounded-full flex items-center justify-center text-black font-black text-xs">
-                        {user.displayName ? user.displayName.substring(0, 2).toUpperCase() : user.email?.substring(0, 2).toUpperCase()}
-                    </div>
-                    <div className="flex flex-col">
-                        <span className="text-[10px] font-normal tracking-[0.2em] text-zinc-500 lowercase leading-none mb-1">welcome</span>
-                        <span className="text-xs font-normal text-white lowercase leading-none">free user</span>
-                    </div>
-
-                    {/* Subtle indicator */}
-                    <div className="ml-2 w-1.5 h-1.5 rounded-full animate-pulse bg-emerald-500" />
-                </div>
-            )}
-
-            {/* Floating Ko-fi Icon near user profile */}
+            {/* Floating Ko-fi Icon */}
             <FloatingKofiIcon position="prompter" />
-
-
 
             <OnboardingModal />
         </div>
