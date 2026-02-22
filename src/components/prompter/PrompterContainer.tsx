@@ -160,10 +160,10 @@ export const PrompterContainer = () => {
 
     return (
         <div className="relative h-screen w-screen bg-black text-white overflow-hidden">
-            {/* Home Button - Top Right */}
+            {/* Home Button - Lower Right (near control panel) */}
             <Link
                 href="/"
-                className="absolute top-6 right-6 z-50 w-10 h-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center hover:bg-white/20 hover:scale-110 transition-all duration-200 group"
+                className="absolute top-20 right-6 z-50 w-10 h-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center hover:bg-white/20 hover:scale-110 transition-all duration-200 group"
                 title="Return to Home"
             >
                 <svg 
