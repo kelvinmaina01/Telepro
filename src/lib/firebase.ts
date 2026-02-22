@@ -1,6 +1,6 @@
-import { initializeApp, getApps } from "firebase/app";
-import { getAuth, GoogleAuthProvider } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { initializeApp, getApps, FirebaseApp } from "firebase/app";
+import { getAuth, GoogleAuthProvider, Auth } from "firebase/auth";
+import { getFirestore, Firestore } from "firebase/firestore";
 
 // Check if Firebase config is available
 const hasFirebaseConfig = 
@@ -8,7 +8,10 @@ const hasFirebaseConfig =
   process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN &&
   process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
 
-let app, auth, db, googleProvider;
+let app: FirebaseApp | undefined;
+let auth: Auth;
+let db: Firestore;
+let googleProvider: GoogleAuthProvider;
 
 try {
   if (hasFirebaseConfig) {
@@ -31,18 +34,18 @@ try {
     console.log("Firebase initialized successfully");
   } else {
     console.log("Firebase config not available - running in demo mode");
-    // Create dummy objects for demo mode
-    auth = {} as any;
-    db = {} as any;
-    googleProvider = {} as any;
+    // Create dummy objects for demo mode with proper types
+    auth = {} as Auth;
+    db = {} as Firestore;
+    googleProvider = {} as GoogleAuthProvider;
   }
 } catch (error) {
   console.error("Firebase initialization failed:", error);
   console.log("Running in demo mode without Firebase");
-  // Create dummy objects for demo mode
-  auth = {} as any;
-  db = {} as any;
-  googleProvider = {} as any;
+  // Create dummy objects for demo mode with proper types
+  auth = {} as Auth;
+  db = {} as Firestore;
+  googleProvider = {} as GoogleAuthProvider;
 }
 
 export { auth, db, googleProvider };
